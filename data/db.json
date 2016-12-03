@@ -1,0 +1,21 @@
+{
+	"discussion_groups" : [
+			
+			{
+				"title" : "Discussion Group A",
+				"post_count" : 1,
+				"posts"	: [
+					{
+						"subject" : "Post 1",
+						"author" : "user A",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					}
+				]
+			
+			}
+			
+		]
+
+
+}

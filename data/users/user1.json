@@ -1,0 +1,17 @@
+{
+	"username": "user A",
+	"groups" : [
+		{
+			"group_name" : "group A",
+			"read_count" : 1,
+			"read_posts" : [
+				{
+					"post_subject" : "Post 1"
+
+				}
+			
+			]
+		}
+	]
+
+}
