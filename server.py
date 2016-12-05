@@ -5,10 +5,25 @@ import socketserver
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
+        welcome_message = "Welcome to hlp forum!"
+        self.request.sendall(welcome_message)
 
         while(True):
-            pass
             #TODO: Add functions for client operations.
+            data = str(self.request.recv(1024), 'ascii')
+            instruction = data.split(' ')[0]
+            if instruction == 'login':
+                pass
+            elif instruction == 'help':
+                pass
+            elif instruction == 'ag':
+                pass
+            elif instruction == 'sg':
+                pass
+            elif instruction == 'rg':
+                pass
+            elif instruction == 'logout':
+                pass
 
             # data = str(self.request.recv(1024), 'ascii')
             # cur_thread = threading.current_thread()
@@ -19,9 +34,8 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
 if __name__ == "__main__":
-    # Port 0 means to select an arbitrary unused port
-    HOST, PORT = "localhost", 9999
 
+    HOST, PORT = "localhost", 9999
     server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
 
     # Start a thread with the server -- that thread will then start one
@@ -33,7 +47,8 @@ if __name__ == "__main__":
     print("Server loop running in thread:", server_thread.name)
 
     while(True):
-        pass #TODO: add parse for closing server
+        #TODO: add parse for closing server on main thread
+        pass 
 
     server.shutdown()
     server.server_close()
