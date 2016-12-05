@@ -1,3 +1,12 @@
 #Server
 
-import socket, socketserver
+import json
+# dictionary with users logged in
+logedin = {}
+
+
+
+
+
+
+
