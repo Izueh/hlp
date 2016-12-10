@@ -7,7 +7,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):
         welcome_message = "Welcome to hlp forum!"
         self.request.sendall(welcome_message)
-
+        data = str(self.request.recv(1024), 'ascii')
         while(True):
             #TODO: Add functions for server operations.
             data = str(self.request.recv(1024), 'ascii')
