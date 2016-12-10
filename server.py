@@ -9,21 +9,9 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         self.request.sendall(welcome_message)
 
         while(True):
-            #TODO: Add functions for client operations.
+            #TODO: Add functions for server operations.
             data = str(self.request.recv(1024), 'ascii')
-            instruction = data.split(' ')[0]
-            if instruction == 'login':
-                pass
-            elif instruction == 'help':
-                pass
-            elif instruction == 'ag':
-                pass
-            elif instruction == 'sg':
-                pass
-            elif instruction == 'rg':
-                pass
-            elif instruction == 'logout':
-                pass
+
 
             # data = str(self.request.recv(1024), 'ascii')
             # cur_thread = threading.current_thread()

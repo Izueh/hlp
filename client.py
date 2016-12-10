@@ -10,6 +10,20 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     while(True):
         # Connect to server and send data
         data = sys.stdin.readline()
+        instruction = data.split(' ')[0]
+        if instruction == 'login':
+            pass
+        elif instruction == 'help':
+            pass
+        elif instruction == 'ag':
+            pass
+        elif instruction == 'sg':
+            pass
+        elif instruction == 'rg':
+            pass
+        elif instruction == 'logout':
+            pass
+        
         try:
             sock.sendall(bytes(data + "\n", "utf-8"))
         
