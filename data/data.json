@@ -13,9 +13,95 @@
 					}
 				]
 			
+			},
+			{
+				"title" : "Discussion Group B",
+				"post_count" : 4,
+				"posts"	: [
+					{
+						"subject" : "Post 1",
+						"author" : "user B",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					},
+					{
+						"subject" : "Post 2",
+						"author" : "user C",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					},
+					{
+						"subject" : "Post 3",
+						"author" : "user D",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					},
+					{
+						"subject" : "Post 4",
+						"author" : "user E",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					}
+				]
+			
+			},
+			{
+				"title" : "Discussion Group C",
+				"post_count" : 3,
+				"posts"	: [
+					{
+						"subject" : "Post 1",
+						"author" : "user B",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					},
+					{
+						"subject" : "Post 2",
+						"author" : "user C",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					},
+					{
+						"subject" : "Post 3",
+						"author" : "user C",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					}
+				]
+			
+			},
+			{
+				"title" : "Discussion Group D",
+				"post_count" : 2,
+				"posts"	: [
+					{
+						"subject" : "Post 1",
+						"author" : "user D",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					},
+					{
+						"subject" : "Post 2",
+						"author" : "user A",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					}
+				]
+			
+			},
+			{
+				"title" : "Discussion Group E",
+				"post_count" : 1,
+				"posts"	: [
+					{
+						"subject" : "Post 1",
+						"author" : "user B",
+						"date" : "mm/dd/yyyy:12:15:35",
+						"content" : "Blah Blah"
+					}
+				]
+			
 			}
 			
 		]
-
-
 }
