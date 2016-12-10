@@ -26,7 +26,7 @@ def login(username, data):
     return
 
 def is_logged_in(username):
-    return False if username==None else True
+    return False if username is None else None
 
 def not_logged_in():
 	print(NOT_LOGGED_IN)
