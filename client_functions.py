@@ -24,9 +24,7 @@ HELP = '''Usage: COMMAND [ARG|SUBCOMMAND] [SUBCOMMAND]
 
 def login(username, data):
     username = data.split(' ')[1]
-
-    # TODO: add check if file exists, file creation if not
-
+    check_user(username)
     return
 
 

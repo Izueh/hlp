@@ -23,6 +23,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 print(ALREADY_LOGGED_IN.format(username))
             else:
                 login(username, data)
+                continue
         elif instruction == 'help':
             print(HELP)
             continue
