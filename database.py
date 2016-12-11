@@ -8,7 +8,7 @@ writingLock = {}
 readingLock= {}
 
 def get_group(group):
-    while writingLock[hlpdb]
+    while writingLock[hlpdb]:
         time.sleep(1)
 
     with open(hlpdb) as f:
