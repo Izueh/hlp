@@ -59,7 +59,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         else:
             print(INVALID_INPUT.format(data))
 
-def internal_ag(username):
+def internal_ag(sock, username):
     n = 0
     data = sys.stdin.readline()
     instruction = data.split(' ')[0]
