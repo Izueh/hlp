@@ -1,0 +1,23 @@
+{
+  "groups": [
+    {
+      "group_id": 1,
+      "read_count": 1,
+      "read_posts": [
+        {
+          "post_id": 1
+        }
+      ]
+    },
+    {
+      "group_id": 4,
+      "read_count": 1,
+      "read_posts": [
+        {
+          "post_id": 1
+        }
+      ]
+    }
+  ]
+}
+

@@ -1,6 +1,7 @@
 from socket import error as SocketError
 import socket
 import sys
+from client_functions import sg, is_logged_in, login, HELP,not_logged_in
 
 HOST, PORT = "localhost", 9999
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
@@ -16,13 +17,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         # Connect to server and send data
         data = sys.stdin.readline()
         instruction = data.split(' ')[0]
+        response=''
         if instruction == 'login':
             if is_logged_in(username):
                 print(ALREADY_LOGGED_IN.format(username))
             else:
                 login(username, data)
         elif instruction == 'help':
-            print(client_functions.HELP)
+            print(HELP)
             continue
         elif instruction == 'ag':
             if is_logged_in(username):
@@ -31,7 +33,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 not_logged_in()
         elif instruction == 'sg':
             if is_logged_in(username):
-                pass
+                response=sg(username)
             else:
                 not_logged_in()
         elif instruction == 'rg':
@@ -46,7 +48,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 not_logged_in()
         else:
             print(INVALID_INPUT.format(data))
-        
+
         try:
             sock.sendall(bytes(response + "\n", "utf-8"))
         
@@ -54,3 +56,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             received = str(sock.recv(1024), "utf-8")
         except SocketError as e:
             print(e)
+

@@ -1,3 +1,5 @@
+from json import load
+
 NOT_LOGGED_IN = "Not logged in. Please log in before using the forum.\n"
 HELP = '''Usage: COMMAND [ARG|SUBCOMMAND] [SUBCOMMAND]
     login USERID\tDetermines which discussion groups you are to and which posts you have read
@@ -18,20 +20,38 @@ HELP = '''Usage: COMMAND [ARG|SUBCOMMAND] [SUBCOMMAND]
     \tq\tQuit rg command
     logout\tLogs out current user'''
 
+
 def login(username, data):
     username = data.split(' ')[1]
 
-    #TODO: add check if file exists, file creation if not
+    # TODO: add check if file exists, file creation if not
 
     return
 
+
 def is_logged_in(username):
-    return False if username==None else True
+    return False if username is None else True
+
 
 def not_logged_in():
-	print(NOT_LOGGED_IN)
+    print(NOT_LOGGED_IN)
     print(HELP)
 
-def ag (ngroups, n):
-	if (n < 0 || n > ngroups):
-		return
+
+def ag(ngroups, n):
+    if (n < 0 or n > ngroups):
+        return
+
+
+def sg(user):
+    groups = get_groups(user)
+    data = ''.join((str(g['group_id'])+'\5' for g in groups))
+    return data
+
+
+def get_groups(uname):
+    with open(uname + '.json') as f:
+        return load(fp=f)['groups']
+
+
+
