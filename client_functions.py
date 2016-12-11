@@ -64,6 +64,7 @@ def sg(user, line, n):
 def rg(line, user, n):
     n = line.split(' ')
     size = 10
+    gname = ''
     if len(n) <= 1:
         raise RuntimeError("No groupname specified")
 
@@ -77,6 +78,7 @@ def rg(line, user, n):
     data = 'rg ' + size + ' ' + n + ' ' + '\5' + gid
     data += get_posts
     return data
+
 
 def check_user(user):
     if user + '.json' not in listdir('./'):
@@ -97,9 +99,40 @@ def get_groups(uname):
     with open(uname + '.json') as f:
         return load(fp=f)['groups']
 
-def p(uname,query,groupid,subject,content):
-    data = '\5'.join([query,groupid,uname,subject,content])
+
+def p(uname, query, groupid, subject, content):
+    data = '\5'.join([query, groupid, uname, subject, content])
     return data
+
+
+def r(query,uname,group):
+    posts = query.split(' ')[1].split('-')
+    if posts == 1:
+        groups=get_groups(uname)
+        for i in range(len(groups)):
+            if group[i]['group_id']==group:
+                groups[i]['read_count']+=1
+                for p in groups[i]['read_posts']:
+                    if p['post_id']==posts[0]:
+                        return
+                groups['read_post'].append({'post_id':posts[0]})
+                with open(uname+'.json','w') as f:
+                    dump({'groups':groups}, fp=f)
+
+    elif posts == 2:
+        groups = get_groups(uname)
+        for i in range(len(groups)):
+            if groups[i]['group_id'] == group:
+                x = []
+                for j in range(len(groups[i]['read_posts'])):
+                    if groups[i]['read_posts'][j]['post_id'] != posts[0] \
+                            and int(posts[0])<groups[i]['read_posts'][j]['post_id']<int(posts[1]):
+                        x.append(groups[i]['read_posts'][j]['post_id'])
+                    groups[i]['read_count']+=len(x)
+                for num in x:
+                    groups[i]['read_posts'].append({'post_id':num})
+                    with open(uname+'.json','w') as f:
+                        dump({'groups':group}, fp=f)
 
 
 
