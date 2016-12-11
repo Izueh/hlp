@@ -1,4 +1,5 @@
-from json import load
+from json import load, dump
+from os import listdir
 
 NOT_LOGGED_IN = "Not logged in. Please log in before using the forum.\n"
 HELP = '''Usage: COMMAND [ARG|SUBCOMMAND] [SUBCOMMAND]
@@ -43,15 +44,20 @@ def ag(ngroups, n):
         return
 
 
-def sg(user):
+def sg(user, query):
     groups = get_groups(user)
-    data = 'sg '.join((str(g['group_id']).join('\5') for g in groups))
+    # TODO: need to check args are valid
+    data = 'sg ' + '\5'.join((str(g['group_id']) for g in groups))
     return data
+
+
+def check_user(user):
+    if user + '.json' not in listdir('./'):
+        with open(user + '.json', 'w') as f:
+            obj = {'groups': []}
+            dump(obj=obj, fp=f, indent=2)
 
 
 def get_groups(uname):
     with open(uname + '.json') as f:
         return load(fp=f)['groups']
-
-
-
