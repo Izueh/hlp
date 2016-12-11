@@ -58,7 +58,7 @@ def ag(user, line, n):
 def sg(user, line, n):
     size = optional_size(line)
     groups = get_groups(user)
-    data = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id']) for g in groups))
+    data = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id'])+'\5'+str(g['read_count']) for g in groups))
     return data
 
 def rg(line, user):
