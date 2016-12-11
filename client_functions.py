@@ -49,7 +49,7 @@ def optional_size(line):
 def ag(line, user):
     size = optional_size(line)
     groups = get_groups(user)
-    data = 'ag ' + size + ''.join(str(g['group_id']) for g in groups)
+    data = 'ag ' + size + '\5'.join(str(g['group_id']) for g in groups)
     return data
 
 def sg(user, line):
