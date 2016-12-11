@@ -89,6 +89,15 @@ def get_groups(uname):
     with open(uname + '.json') as f:
         return load(fp=f)['groups']
 
+def p(uname,query,groupid,subject,content):
+    data = '\5'.join([query,groupid,uname,subject,content])
+    return data
+
+
+
+
+
+
 def check_group(uname, gname):
     groups = get_groups(uname)
     for g in groups:

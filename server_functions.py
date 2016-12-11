@@ -34,9 +34,8 @@ def ag(usergroups):
     return data
 
 
-def p(gID, data):
-    data = data.split('\r\n')
-    author, subject, content = data.split('\5')
+def p(data):
+    query,gID,author, subject, content = data.split('\5')
     groups = get_group()
     for i in range(len(groups)):
         if groups[i]['group_id'] == gID:
@@ -67,8 +66,8 @@ def sg(usergroups):
         if i > len(groups):
             break
         if groups[i]['group_id'] in ugroups:
-	        data += '%d. (%s) %s' % \
-	                (groups[i]['group_id'],'s' if groups[i]['group_id'] in ugroups else ' ', groups[i]['group_id'])
-	        data +='\n'
+            data += '%d. (%s) %s' % \
+                    (groups[i]['group_id'],'s' if groups[i]['group_id'] in ugroups else ' ', groups[i]['group_id'])
+            data +='\n'
     data.rstrip()
     return data
