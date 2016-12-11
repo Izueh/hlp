@@ -19,6 +19,8 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
                 response = sg(data)
             elif instruction == 'ag':
                 response = ag(data)
+            elif instruction == 'rg':
+                response = rg(data)
             else:
                 self.request.sendall(bytes(INVALID_INPUT.format(data)))
                 continue
