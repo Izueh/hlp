@@ -38,9 +38,20 @@ def not_logged_in():
     print(HELP)
 
 
-def ag(ngroups, n):
-    if (n < 0 or n > ngroups):
-        return
+def ag(data, user):
+	n = data.split(' ')
+    size = len(n)
+    #Is the second argument a number?
+    if (int(size).isdigit())
+        if (size > 1):
+            size = n[1]
+        else:
+            size = 0
+    if (size < 0):
+        raise
+    groups = get_groups(user)
+    data = 'ag '.join((str(g['group_id'])+'\5' for g in groups))
+    return data
 
 
 def sg(user):
@@ -52,6 +63,3 @@ def sg(user):
 def get_groups(uname):
     with open(uname + '.json') as f:
         return load(fp=f)['groups']
-
-
-
