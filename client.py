@@ -1,7 +1,7 @@
 from socket import error as SocketError
 import socket
 import sys
-from client_functions import sg, is_logged_in, login, HELP,not_logged_in
+import client_functions
 
 HOST, PORT = "localhost", 9999
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
@@ -31,6 +31,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         elif instruction == 'ag':
             if is_logged_in(username): 
                 response = ag(data, username)
+                respond_to_server(sock, response)
+                internal_ag(sock, username)
+                continue
             else:
                 not_logged_in()
                 continue
@@ -55,13 +58,34 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 continue
         else:
             print(INVALID_INPUT.format(data))
-            continue
 
-        try:
-            sock.sendall(bytes(response + "\n", "utf-8"))
-        
-            # Receive data from the server
-            received = str(sock.recv(1024), "utf-8")
-        except SocketError as e:
-            print(e)
+def internal_ag(username):
+    n = 0
+    data = sys.stdin.readline()
+    instruction = data.split(' ')[0]
 
+    while(True):
+        if instruction == 's':
+            pass
+        elif instruction == 'u':
+            pass
+        elif instruction == 'n':
+            pass
+        elif instruction == 'q':
+            pass
+        else:
+            print(INVALID_INPUT.format(data))
+
+def receive_from_server(sock):
+    try:
+        received = str(sock.recv(1024), "utf-8")
+    except SocketError as e:
+        print(e)
+
+    return received
+
+def respond_to_server(sock, response):
+    try:
+        sock.sendall(bytes(response + "\n", "utf-8"))
+    except SocketError as e:
+        print(e)
