@@ -27,13 +27,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             print(HELP)
             continue
         elif instruction == 'ag':
-            if is_logged_in(username):
-                pass
+            if is_logged_in(username): 
+                response=ag(data, username)
             else:
                 not_logged_in()
         elif instruction == 'sg':
             if is_logged_in(username):
-                response=sg(username)
+                response=sg(data, username)
             else:
                 not_logged_in()
         elif instruction == 'rg':
