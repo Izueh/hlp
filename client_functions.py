@@ -39,8 +39,8 @@ def not_logged_in():
 def optional_size(line):
     n = line.split(' ')
     size = 10
-    if (len(n) > 1):
-        if(n[1].isdigit()):
+    if len(n) > 1:
+        if n[1].isdigit():
             size = int(n[1])
         else:
             raise TypeError("Non-digit input was provided: ", size)
@@ -52,12 +52,28 @@ def ag(line, user):
     data = 'ag ' + size + '\5'.join(str(g['group_id']) for g in groups)
     return data
 
-def sg(user, line):
+def sg(line, user):
     size = optional_size(line)
     groups = get_groups(user)
     data = 'sg ' + size + ' '+ '\5'.join((str(g['group_id']) for g in groups))
     return data
 
+def rg(line, user):
+    n = line.split(' ')
+    size = 10
+    gname = ''
+    if len(n) <= 1:
+        raise RuntimeError("No groupname specified")
+
+    gname = gname + n[1]
+    gid = check_group(gname)
+    if len(n) > 2:
+        if n[2].isdigit():
+            size = int(n[2])
+        else:
+            raise TypeError("Non-digit input was provided: ", size)
+    data = 'rg ' + size + ' ' + '\5' + gid
+    return data
 
 def check_user(user):
     if user + '.json' not in listdir('./'):
@@ -68,4 +84,12 @@ def check_user(user):
 
 def get_groups(uname):
     with open(uname + '.json') as f:
-        return load(fp=f)['groups']
+        return load(fp=f)['groups'] 
+
+def check_group(uname, gname):
+    groups = get_groups(uname)
+    for g in groups:
+        if g['group_name'] == gname:
+            return g['group_id']
+        else: 
+            raise ValueError("Not subscribed to group: ", gname)
