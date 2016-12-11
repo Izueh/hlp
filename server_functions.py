@@ -19,9 +19,14 @@ def get_group():
 
 def ag(usergroups):
     usergroups= usergroups.split(' ')
-    ugroups = [int(g) for g in usergroups[2].split('\5')]
-
+    ugroups = [int(g) for g in usergroups[3].split('\5')]
+    data = ''
     groups = get_group()
-    data = '\n'.join('%d. (%s) %s ' % (g['group_id'],'s' if g['group_id'] in ugroups else ' ' , g['title'] ) for g in groups)
-
+    for i in range(int(usergroups[1]),int(usergroups[2])):
+        if i > len(groups):
+            break
+        data += '%d. (%s) %s' % \
+                (groups[i]['group_id'],'s' if groups[i]['group_id'] in ugroups else ' ', groups[i]['group_id'])
+        data +='\n'
+    data.rstrip()
     return data

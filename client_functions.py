@@ -36,26 +36,29 @@ def not_logged_in():
     print(NOT_LOGGED_IN)
     print(HELP)
 
+
 def optional_size(line):
     n = line.split(' ')
     size = 10
     if (len(n) > 1):
-        if(n[1].isdigit()):
+        if (n[1].isdigit()):
             size = int(n[1])
         else:
             raise TypeError("Non-digit input was provided: ", size)
     return str(size)
 
-def ag(line, user):
+
+def ag(user, line, n):
     size = optional_size(line)
     groups = get_groups(user)
-    data = 'ag ' + size + '\5'.join(str(g['group_id']) for g in groups)
+    data = 'ag ' + size + ' ' + n + '\5'.join(str(g['group_id']) for g in groups)
     return data
 
-def sg(user, line):
+
+def sg(user, line, n):
     size = optional_size(line)
     groups = get_groups(user)
-    data = 'sg ' + size + ' '+ '\5'.join((str(g['group_id']) for g in groups))
+    data = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id']) for g in groups))
     return data
 
 
