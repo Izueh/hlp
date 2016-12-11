@@ -61,10 +61,9 @@ def sg(user, line, n):
     data = 'sg ' + str(n) + ' ' + size + ' ' + '\5'.join((str(g['group_id']) for g in groups))
     return data
 
-def rg(line, user):
+def rg(line, user, n):
     n = line.split(' ')
     size = 10
-    gname = ''
     if len(n) <= 1:
         raise RuntimeError("No groupname specified")
 
@@ -75,7 +74,8 @@ def rg(line, user):
             size = int(n[2])
         else:
             raise TypeError("Non-digit input was provided: ", size)
-    data = 'rg ' + size + ' ' + '\5' + gid
+    data = 'rg ' + size + ' ' + n + ' ' + '\5' + gid
+    data += get_posts
     return data
 
 def check_user(user):
@@ -84,6 +84,14 @@ def check_user(user):
             obj = {'groups': []}
             dump(obj=obj, fp=f, indent=2)
 
+def get_posts(uname, gname):
+    groups = get_groups(uname)
+    data = '\5'
+    for g in groups:
+        if g['group_name'] == gname:
+            for p in g['read_posts']:
+                data += '\r\n' + p['post_id']
+    return data
 
 def get_groups(uname):
     with open(uname + '.json') as f:
