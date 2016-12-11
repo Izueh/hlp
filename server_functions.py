@@ -74,21 +74,21 @@ def sg(usergroups):
     return data
 
 def rg(usergroup):
-	usergroups = usergroups.split(' ')
+    usergroups = usergroups.split(' ')
     ugroups = int(usergroups[3].split('\5'))
     pids = ugroups[1].split('\r\n')
     gid = ugroups[0]
-	groups = get_group()
-	data = ''
-	for g in groups:
-		if g['group_id'] == gid:
-			for i in range (int(usergroups[1]), int(usergroups[2])):
-				post = g['posts'][i]
-				read = ' '
-				if post['post_id'] in pids:
+    groups = get_group()
+    data = ''
+    for g in groups:
+        if g['group_id'] == gid:
+            for i in range (int(usergroups[1]), int(usergroups[2])):
+                post = g['posts'][i]
+                read = ' '
+                if post['post_id'] in pids:
                     read = 'N'
-				data += '%d.%s%s %s %s %s %s' % \
-						(post['post_id'], read, post['month'], post['day'], post['time'], post['content'])
-				data += '\n'
-	data.rstrip()
-	return data 
+                data += '%d.%s%s %s %s %s %s' % \
+                        (post['post_id'], read, post['month'], post['day'], post['time'], post['content'])
+                data += '\n'
+    data.rstrip()
+    return data
