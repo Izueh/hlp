@@ -45,7 +45,7 @@ def ag(ngroups, n):
 
 def sg(user):
     groups = get_groups(user)
-    data = ''.join((str(g['group_id'])+'\5' for g in groups))
+    data = 'sg '.join((str(g['group_id']).join('\5') for g in groups))
     return data
 
 
