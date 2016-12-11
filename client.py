@@ -21,6 +21,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         if instruction == 'login':
             if is_logged_in(username):
                 print(ALREADY_LOGGED_IN.format(username))
+                continue
             else:
                 login(username, data)
                 continue
@@ -29,26 +30,32 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             continue
         elif instruction == 'ag':
             if is_logged_in(username): 
-                response=ag(data, username)
+                response = ag(data, username)
             else:
                 not_logged_in()
+                continue
         elif instruction == 'sg':
             if is_logged_in(username):
-                response=sg(data, username)
+                response = sg(data, username)
             else:
                 not_logged_in()
+                continue
         elif instruction == 'rg':
             if is_logged_in(username):
                 pass
             else:
                 not_logged_in()
+                continue
         elif instruction == 'logout':
             if is_logged_in(username):
                 username = None
+                continue
             else:
                 not_logged_in()
+                continue
         else:
             print(INVALID_INPUT.format(data))
+            continue
 
         try:
             sock.sendall(bytes(response + "\n", "utf-8"))
