@@ -42,10 +42,10 @@ def optional_size(line):
 	n = line.split(' ')
     size = 10
     if (len(n) > 1):
-		if(int(n[1].isdigit())):
+		if(n[1].isdigit()):
        		size = int(n[1])
        	else:
-       		raise
+       		raise TypeError("Non-digit input was provided: ", size)
     return str(size)
 
 def ag(line, user):
