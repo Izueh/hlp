@@ -6,7 +6,7 @@ import client_functions
 HOST, PORT = "localhost", 9999
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
 ALREADY_LOGGED_IN = "Already logged in as {}. Please log out if you want to log in again.\n"
-
+previous_ag_sg_response = ''
 
 # Create a socket (SOCK_STREAM means a TCP socket)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -44,7 +44,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 continue
         elif instruction == 'rg':
             if is_logged_in(username):
-                pass
+                internal_rg(sock, username, data)
+                continue
             else:
                 not_logged_in()
                 continue
@@ -57,29 +58,66 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 continue
         else:
             print(INVALID_INPUT.format(data))
+            print(HELP)
+
+#parses previous response to extract gid
+def gid_from_gname(gname):
+    lines = previous_ag_sg_response.split('\n')
+    for line in lines:
+        if gname in line:
+            return int(line[0:1])
+
+
+
+def internal_rg(sock, username, data):
+    offset = 0
+    gname = data.split(' ')[1]
+    gid = gid_from_gname(gname)
+    response = rg(username, data, gid, offset)
+    respond_to_server(sock, response)
+    received = receive_from_server(sock)
+
+    while(True):
+        data = sys.stdin.readline()
+        instruction = data.split(' ')[0]
+        if instruction.isdigit():
+            pass
+        elif instruction == 'r':
+            pass
+        elif instruction == 'n':
+            pass
+        elif instruction == 'p':
+            pass
+        elif instruction == 'q':
+            break
+        else:
+            print(INVALID_INPUT.format(data))
+            print(HELP)
+
 
 def internal_ag(sock, username, is_ag):
     n = 0
     if is_ag:
-        response = ag(username, data, n)
+        previous_ag_sg_response = response = ag(username, data, n)
     else:
-        response = sg(username, data, n)
+        previous_ag_sg_response = response = sg(username, data, n)
     respond_to_server(sock, response)
     received = receive_from_server(sock)
     print(received)
-    data = sys.stdin.readline()
-    instruction = data.split(' ')[0]
 
     while(True):
+        data = sys.stdin.readline()
+        instruction = data.split(' ')[0]
+
         if is_ag and instruction == 's':
             pass
         elif instruction == 'u':
             pass
         elif instruction == 'n':
             if is_ag:
-                response = ag(username, data, n)
+                previous_ag_sg_response = response = ag(username, data, n)
             else:
-                response = sg(username, data, n)
+                previous_ag_sg_response = response = sg(username, data, n)
             respond_to_server(sock, response)
             n = n + 1
             continue
