@@ -8,7 +8,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         welcome_message = "Welcome to hlp forum!"
-        self.request.sendall(welcome_message)
+        self.request.sendall(bytes(welcome_message, 'utf-8'))
         response = ''
 
         while(True):
@@ -26,7 +26,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
             elif instruction == 'rp':
                 response = rp(data)
             else:
-                self.request.sendall(bytes(INVALID_INPUT.format(data)))
+                self.request.sendall(bytes(INVALID_INPUT.format(data), 'utf-8'))
                 continue
 
             self.request.sendall(bytes(response,'utf-8'))
