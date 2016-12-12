@@ -1,7 +1,7 @@
 from socket import error as SocketError
 import socket
 import sys
-from client_functions import is_logged_in, not_logged_in, HELP, login, ag, sg, u, r, p, s, rp,rg
+from client_functions import is_logged_in, not_logged_in, HELP, login, ag, sg, u, r, p, s, rp, rg
 
 HOST, PORT = "localhost", 9999
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
@@ -47,7 +47,7 @@ def internal_rg(sock, username, data):
         print(receive_from_server(sock))
 
 
-def internal_ag(sock, username, data,is_ag):
+def internal_ag(sock, username, data, is_ag):
     n = 0
     if is_ag:
         previous_ag_sg_response = response = ag(username, data, n)
@@ -72,7 +72,7 @@ def internal_ag(sock, username, data,is_ag):
                 previous_ag_sg_response = response = ag(username, data, n)
             else:
                 previous_ag_sg_response = response = sg(username, data, n)
-            n +=  1
+            n += 1
         elif instruction == 'q':
             return
         else:
@@ -90,13 +90,11 @@ def receive_from_server(sock):
         print(e)
 
 
-
 def respond_to_server(sock, response):
     try:
-        sock.sendall(bytes(response + "\n", "utf-8"))
+        sock.sendall(bytes(response, "utf-8"))
     except SocketError as e:
         print(e)
-
 
 
 # Create a socket (SOCK_STREAM means a TCP socket)
@@ -150,6 +148,3 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         else:
             print(INVALID_INPUT.format(data))
             print(HELP)
-
-
-

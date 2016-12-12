@@ -21,14 +21,14 @@ def get_all_groups():
 
 def ag(data):
     data = data.split(' ')
-    ugroups = [int(g) for g in data[3].split('\5')]
+    ugroups = [int(g) for g in data[3].split('\5')] if data[3] is not '' else []
     response = ''
     groups = get_all_groups()
     for i in range(int(data[1]), int(data[2])):
-        if i > len(groups):
+        if i >= len(groups):
             break
         response += '%d. (%s) %s' % \
-                    (groups[i]['group_id'], 's' if groups[i]['group_id'] in ugroups else ' ', groups[i]['group_id'])
+                    (groups[i]['group_id'], 's' if groups[i]['group_id'] in ugroups else ' ', groups[i]['title'])
         response += '\n'
     response.rstrip()
     return response

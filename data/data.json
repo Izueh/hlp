@@ -90,6 +90,7 @@
           "content": "Blah Blah"
         },
         {
+          "post_id": 2,
           "subject": "Post 2",
           "author": "user A",
           "date": "mm/dd/yyyy:12:15:35",
@@ -98,11 +99,13 @@
       ]
     },
     {
-      "post_id": 2,
+
+      "group_id": 5,
       "title": "Discussion Group E",
       "post_count": 1,
       "posts": [
         {
+          "post_id":1,
           "subject": "Post 1",
           "author": "user B",
           "date": "mm/dd/yyyy:12:15:35",
