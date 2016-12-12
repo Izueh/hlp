@@ -58,7 +58,9 @@ def ag(user, line, n):
 def sg(user, line, n):
     size = optional_size(line, n)
     groups = get_groups(user)
-    data = 'sg ' + str(n) + ' ' + size + ' ' + '\5'.join((str(g['group_id']) for g in groups))
+    #with optional size N of size and offset of n (really need to change variable names)
+    #we have output: 'sg 4 7 1\x0520\x052\x0510'
+    data = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id'])+'\5'+str(g['read_count']) for g in groups))
     return data
 
 def rg(line, user, n):
@@ -133,11 +135,6 @@ def r(query,uname,group):
                     groups[i]['read_posts'].append({'post_id':num})
                     with open(uname+'.json','w') as f:
                         dump({'groups':group}, fp=f)
-
-
-
-
-
 
 def check_group(uname, gname):
     groups = get_groups(uname)
