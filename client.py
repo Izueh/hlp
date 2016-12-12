@@ -120,8 +120,6 @@ def internal_ag(sock, username, is_ag):
         elif instruction == 'u':
             u(username, data)
             continue
-        elif instruction == 'r':
-            r(username, data, gid)
         elif instruction == 'n':
             if is_ag:
                 previous_ag_sg_response = response = ag(username, data, n)
