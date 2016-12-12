@@ -57,26 +57,27 @@ def p(data):
 
 
 def sg(data):
-    # input does not only contain usergroups
-    # of the form: 'sg 4 7 1\x0520\x052\x0510'
+    #input does not only contain usergroups
+    #of the form: 'sg 4 7 1\x0520\x052\x0510'
     data = data.split(' ')
     groups_read_count = data[3].split('\5')
-    ugroups = []  # ids of subscribed groups
-    read_count = []  # count of posts read
-    for x in range(0, len(groups_read_count) - 1, 2):
-        # populating above
+    ugroups = [] #ids of subscribed groups
+    read_count = [] #count of posts read
+    for x in range(0, len(groups_read_count)-1, 2):
+        #populating above
         ugroups.append(int(groups_read_count[x]))
-        read_count.append(int(groups_read_count[x + 1]))
-    # obtaining all discussion groups
+        read_count.append(int(groups_read_count[x+1]))
+    #obtaining all discussion groups
     groups = get_all_groups()
-    # formatting response in format:
-    # <id>.    <unread posts>   <groups title>
-    for i in range(int(data[1]), int(data[2]) + int(data[1])):
+    #formatting response in format:
+    #<id>.    <unread posts>   <groups title>
+    response = ''
+    for i in range(int(data[1]),int(data[2])+int(data[1])):
         if i >= len(groups):
             break
         if groups[i]['group_id'] in ugroups:
             response += '%d. %d %s\n' % \
-                        (i, groups[i]['post_count'] - read_count[i], groups[i]['title'])
+                    (i,groups[i]['post_count']-read_count[i], groups[i]['title'])
     response.rstrip()
     return response
 
