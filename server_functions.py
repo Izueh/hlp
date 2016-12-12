@@ -70,6 +70,7 @@ def sg(data):
     groups = get_all_groups()
     #formatting response in format:
     #<id>.    <unread posts>   <groups title>
+    response = ''
     for i in range(int(data[1]),int(data[2])+int(data[1])):
         if i >= len(groups):
             break
