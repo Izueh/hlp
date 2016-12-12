@@ -111,11 +111,11 @@ def p(uname, data, groupid):
     subject = input('Subject: ')
     content = input('Content: ')
 
-    response = data + ' ' + '\5'.join([groupid, uname, subject, content])
+    response = data + ' ' + '\5'.join([str(groupid), uname, subject, content])
     return response
 
 
-def r(data, uname, groupid):
+def r(uname, data, groupid):
     args = data.split(' ')
     start = int(args[1])
     end = int(args[2])
@@ -157,7 +157,7 @@ def s(uname, data):
         dump({'groups': groups}, fp=f, indent=4)
 
 
-def u(uname, data, ):
+def u(uname, data):
     args = data.split(' ')
     start = int(args[1])
     end = int(args[2])
@@ -180,6 +180,6 @@ def check_subscription(username, gid):
             return True
     raise False
 
-def rp(groupid, data):
-    return '\5'.join(['rp',groupid,data])
+def rp(gid, data):
+    return '\5'.join(['rp',str(gid),data])
 
