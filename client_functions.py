@@ -65,22 +65,23 @@ def sg(user, data, n):
     return response
 
 
-def rg(data, user, n):
-    n = data.split(' ')
-    size = 10
-    gname = ''
-    if len(n) <= 1:
+def rg(username, data, gid, offset):
+    # data.split(' ') -> ['rg','group.name','5']
+    data = data.split(' ')
+    n = 10 #how many at a time
+    if len(data) <= 1:
         raise RuntimeError("No groupname specified")
 
-    gname = gname + n[1]
-    gid = check_group(gname)
-    if len(n) > 2:
+    if not check_subscription(username, gid):
+        return
+
+    if len(data) > 2:
         if n[2].isdigit():
-            size = int(n[2])
+            n = data[2]
         else:
-            raise TypeError("Non-digit input was provided: ", size)
-    response = 'rg ' + size + ' ' + n + ' ' + '\5' + gid
-    response += get_posts
+            raise TypeError("Non-digit input was provided: ", n)
+    response = 'rg ' + n + ' ' + str(offset) + ' ' + '\5' + str(gid)
+    response += get_posts(username, gid)
     return response
 
 
@@ -91,13 +92,13 @@ def check_user(user):
             dump(obj=obj, fp=f, indent=2)
 
 
-def get_posts(uname, gname):
-    groups = get_subscribed_groups(uname)
-    data = '\5'
+def get_posts(username, gid):
+    groups = get_subscribed_groups(username)
+    response = '\5'
     for g in groups:
-        if g['group_name'] == gname:
+        if g['group_id'] == gid:
             for p in g['read_posts']:
-                response += '\r\n' + p['post_id']
+                response += '\r\n' + str(p['post_id'])
     return response
 
 
@@ -169,16 +170,15 @@ def u(uname, data, ):
         dump({'groups': groups}, fp=f, indent=4)
 
 
-def check_group(uname, gname):
-    groups = get_subscribed_groups(uname)
+def check_subscription(username, gid):
+    groups = get_subscribed_groups(username)
     for g in groups:
-        if g['group_name'] == gname:
-            return g['group_id']
-        else:
-            raise ValueError("Not subscribed to group: ", gname)
+        if g['id'] == gid:
+            return True
+    raise False
 
 
-def id(groupid, data):
+def rp(groupid, data):
     return '\5'.join(['rp',groupid,data])
 
 
