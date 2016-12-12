@@ -1,6 +1,7 @@
 import socket
 import threading
 import socketserver
+import sys
 from server_functions import sg,ag ,p ,rp,rg
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
 
@@ -49,8 +50,10 @@ if __name__ == "__main__":
     print("Server loop running in thread:", server_thread.name)
 
     while(True):
-        #TODO: add parse for closing server on main thread
-        pass 
+        data = sys.stdin.readline().rstrip()
+        instruction = data[0]
+        if instruction == 'q':
+            break
 
     server.shutdown()
     server.server_close()

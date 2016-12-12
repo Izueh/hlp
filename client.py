@@ -106,7 +106,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
 
     while (True):
         # Connect to server and send data
-        data = sys.stdin.readline()
+        data = sys.stdin.readline().rstrip()
         instruction = data.split(' ')[0]
         response = ''
         if instruction == 'login':
@@ -114,7 +114,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 print(ALREADY_LOGGED_IN.format(username))
                 continue
             else:
-                login(username, data)
+                username = login(username, data)
                 continue
         elif instruction == 'help':
             print(HELP)

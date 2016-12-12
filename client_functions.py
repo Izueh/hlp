@@ -19,13 +19,13 @@ HELP = '''Usage: COMMAND [ARG|SUBCOMMAND] [SUBCOMMAND]
     \tn\tLists the next N posts. Exits rg command when all N posts displayed
     \tp\tPost to the group
     \tq\tQuit rg command
-    logout\tLogs out current user'''
+    logout\tLogs out current user\n\n\n\n'''
 
 
 def login(username, data):
     username = data.split(' ')[1]
     check_user(username)
-    return
+    return username
 
 
 def is_logged_in(username):
@@ -51,7 +51,7 @@ def optional_size(data, start):
 def ag(user, data, n):
     size = optional_size(data, n)
     groups = get_subscribed_groups(user)
-    response = 'ag ' + n + ' ' + size + '\5'.join(str(g['group_id']) for g in groups)
+    response = 'ag ' + str(n) + ' ' + size + ' ' + '\5'.join(str(g['group_id']) for g in groups)
     return response
 
 
