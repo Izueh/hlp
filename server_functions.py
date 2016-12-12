@@ -2,7 +2,6 @@ import time
 import datetime
 from json import dump, load
 
-
 hlpdb = 'data/data.json'
 writingLock = {}
 readingLock = {}
@@ -11,9 +10,9 @@ readingLock = {}
 def get_all_groups():
     while hlpdb in writingLock and writingLock[hlpdb]:
         time.sleep(1)
+    readingLock[hlpdb] = True
     with open(hlpdb) as f:
         db = load(f)
-        readingLock[hlpdb] = True
         groups = db['discussion_groups']
 
     readingLock.pop(hlpdb)
@@ -29,10 +28,11 @@ def ag(data):
         if i > len(groups):
             break
         response += '%d. (%s) %s' % \
-                (groups[i]['group_id'], 's' if groups[i]['group_id'] in ugroups else ' ', groups[i]['group_id'])
+                    (groups[i]['group_id'], 's' if groups[i]['group_id'] in ugroups else ' ', groups[i]['group_id'])
         response += '\n'
     response.rstrip()
     return response
+
 
 def p(data):
     query, gID, author, subject, content = data.split('\5')
@@ -47,7 +47,7 @@ def p(data):
                 'date': datetime.datetime.now().strftime('%b %d %X'),
                 'content': content
             })
-            while writingLock[hlpdb]:
+            while hlpdb in writingLock or writingLock[hlpdb] or hlpdb in readingLock or readingLock[hlpdb]:
                 time.sleep(1)
             writingLock[hlpdb] = True
             with open(hlpdb, 'w') as f:
@@ -55,27 +55,28 @@ def p(data):
             writingLock.pop(hlpdb)
             return groups[i]
 
+
 def sg(data):
-    #input does not only contain usergroups
-    #of the form: 'sg 4 7 1\x0520\x052\x0510'
+    # input does not only contain usergroups
+    # of the form: 'sg 4 7 1\x0520\x052\x0510'
     data = data.split(' ')
     groups_read_count = data[3].split('\5')
-    ugroups = [] #ids of subscribed groups
-    read_count = [] #count of posts read
-    for x in range(0, len(groups_read_count)-1, 2):
-        #populating above
+    ugroups = []  # ids of subscribed groups
+    read_count = []  # count of posts read
+    for x in range(0, len(groups_read_count) - 1, 2):
+        # populating above
         ugroups.append(int(groups_read_count[x]))
-        read_count.append(int(groups_read_count[x+1]))
-    #obtaining all discussion groups
+        read_count.append(int(groups_read_count[x + 1]))
+    # obtaining all discussion groups
     groups = get_all_groups()
-    #formatting response in format:
-    #<id>.    <unread posts>   <groups title>
-    for i in range(int(data[1]),int(data[2])+int(data[1])):
+    # formatting response in format:
+    # <id>.    <unread posts>   <groups title>
+    for i in range(int(data[1]), int(data[2]) + int(data[1])):
         if i >= len(groups):
             break
         if groups[i]['group_id'] in ugroups:
             response += '%d. %d %s\n' % \
-                    (i,groups[i]['post_count']-read_count[i], groups[i]['title'])
+                        (i, groups[i]['post_count'] - read_count[i], groups[i]['title'])
     response.rstrip()
     return response
 
@@ -105,7 +106,17 @@ def rg(data):
                     if x[i]['post_id'] in pids:
                         read = 'N'
                     response += '%d. %s %s %s' % \
-                            (post['post_id'], read, post['date'], post['content'])
+                                (post['post_id'], read, post['date'], post['content'])
                     response += '\n'
     response.rstrip()
     return response
+
+
+def rp(data):
+    query, groupid, postid = data.split('\5')
+    groups = get_all_groups()
+    for g in groups:
+        if g['group_id']==groupid:
+            for p in g['posts']:
+                if p['post_id']==postid:
+                    return '\5'.join([p['post_id'],p['subject'],p['author'],p['date'],p['content']])

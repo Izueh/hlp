@@ -149,12 +149,11 @@ def s(uname, data):
             'read_posts': []
         })
 
-    with open(uname+'.json','w') as f:
-        dump({'groups':groups},fp=f,indent=4)
+    with open(uname + '.json', 'w') as f:
+        dump({'groups': groups}, fp=f, indent=4)
 
 
-
-def u(uname, data,):
+def u(uname, data, ):
     args = data.split(' ')
     start = int(args[1])
     end = int(args[2])
@@ -166,8 +165,8 @@ def u(uname, data,):
             x.append(groups[i])
     for o in x:
         groups.remove(o)
-    with open(uname+'.json') as f:
-        dump({'groups':groups},fp=f,indent=4)
+    with open(uname + '.json') as f:
+        dump({'groups': groups}, fp=f, indent=4)
 
 
 def check_group(uname, gname):
@@ -177,3 +176,9 @@ def check_group(uname, gname):
             return g['group_id']
         else:
             raise ValueError("Not subscribed to group: ", gname)
+
+
+def id(groupid, data):
+    return '\5'.join(['rp',groupid,data])
+
+
