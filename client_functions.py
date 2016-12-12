@@ -60,7 +60,8 @@ def sg(user, data, n):
     groups = get_subscribed_groups(user)
     # with optional size N of size and offset of n (really need to change variable names)
     # we have output: 'sg 4 7 1\x0520\x052\x0510'
-    response = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id']) + '\5' + str(g['read_count']) for g in groups))
+    response = 'sg ' + size + ' ' + n + ' ' + '\5'.join(
+        (str(g['group_id']) + '\5' + str(g['read_count']) for g in groups))
     return response
 
 
@@ -110,37 +111,7 @@ def p(uname, data, groupid, subject, content):
     return response
 
 
-def r(data, uname, group):
-    posts = data.split(' ')[1].split('-')
-    if posts == 1:
-        groups = get_subscribed_groups(uname)
-        for i in range(len(groups)):
-            if group[i]['group_id'] == group:
-                groups[i]['read_count'] += 1
-                for p in groups[i]['read_posts']:
-                    if p['post_id'] == posts[0]:
-                        return
-                groups['read_post'].append({'post_id': posts[0]})
-                with open(uname + '.json', 'w') as f:
-                    dump({'groups': groups}, fp=f)
-
-    elif posts == 2:
-        groups = get_subscribed_groups(uname)
-        for i in range(len(groups)):
-            if groups[i]['group_id'] == group:
-                x = []
-                for j in range(len(groups[i]['read_posts'])):
-                    if groups[i]['read_posts'][j]['post_id'] != posts[0] \
-                            and int(posts[0]) < groups[i]['read_posts'][j]['post_id'] < int(posts[1]):
-                        x.append(groups[i]['read_posts'][j]['post_id'])
-                    groups[i]['read_count'] += len(x)
-                for num in x:
-                    groups[i]['read_posts'].append({'post_id': num})
-                    with open(uname + '.json', 'w') as f:
-                        dump({'groups': groups}, fp=f)
-
-
-def s(uname, groupid, data):
+def r(data, uname, groupid):
     args = data.split(' ')
     start = int(args[1])
     end = int(args[2])
@@ -159,23 +130,44 @@ def s(uname, groupid, data):
         dump({'groups': groups}, fp=f, indent=True)
 
 
-def u(uname, data, groupid):
+def s(uname, data):
+    args = data.split(' ')
+    start = int(args[1])
+    end = int(args[2]) + 1
+    l = [i for i in range(start, end)]
+    groups = get_subscribed_groups(uname)
+    x = []
+    for i in range(len(groups)):
+        if groups[i]['group_id'] in l:
+            x.append(groups[i]['group_id'])
+    for o in x:
+        l.remove(o)
+    for i in l:
+        groups.append({
+            'group_id': i,
+            'read_count': 0,
+            'read_posts': []
+        })
+
+    with open(uname+'.json','w') as f:
+        dump({'groups':groups},fp=f,indent=4)
+
+
+
+def u(uname, data,):
     args = data.split(' ')
     start = int(args[1])
     end = int(args[2])
     l = [i for i in range(start, end)]
     groups = get_subscribed_groups(uname)
-    x=[]
+    x = []
     for i in range(len(groups)):
-        if groups[i]['group_id'] == groupid:
-            for j in range(len(groups[i]['read_posts'])):
-                if groups[i]['read_posts'][j]['post_id'] in l:
-                    x.append(groups[i]['read_posts'][j])
-            for o in x:
-                groups[i]['read_posts'].remove(o)
-
-    with open(uname + '.json', 'w') as f:
-        dump({'groups': groups}, fp=f, indent=4)
+        if groups[i]['group_id'] in l:
+            x.append(groups[i])
+    for o in x:
+        groups.remove(o)
+    with open(uname+'.json') as f:
+        dump({'groups':groups},fp=f,indent=4)
 
 
 def check_group(uname, gname):
@@ -185,4 +177,3 @@ def check_group(uname, gname):
             return g['group_id']
         else:
             raise ValueError("Not subscribed to group: ", gname)
-
