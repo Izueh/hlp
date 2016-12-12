@@ -50,14 +50,14 @@ def optional_size(line, start):
 
 def ag(user, line, n):
     size = optional_size(line, n)
-    groups = get_groups(user)
+    groups = get_subscribed_groups(user)
     response = 'ag ' + n + ' ' + size + '\5'.join(str(g['group_id']) for g in groups)
     return response
 
 
 def sg(user, line, n):
     size = optional_size(line, n)
-    groups = get_groups(user)
+    groups = get_subscribed_groups(user)
     #with optional size N of size and offset of n (really need to change variable names)
     #we have output: 'sg 4 7 1\x0520\x052\x0510'
     response = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id'])+'\5'+str(g['read_count']) for g in groups))
@@ -91,7 +91,7 @@ def check_user(user):
 
 
 def get_posts(uname, gname):
-    groups = get_groups(uname)
+    groups = get_subscribed_groups(uname)
     response = '\5'
     for g in groups:
         if g['group_name'] == gname:
@@ -100,7 +100,7 @@ def get_posts(uname, gname):
     return response
 
 
-def get_groups(uname):
+def get_subscribed_groups(uname):
     with open(uname + '.json') as f:
         return load(fp=f)['groups']
 
@@ -113,7 +113,7 @@ def p(uname, query, groupid, subject, content):
 def r(query, uname, group):
     posts = query.split(' ')[1].split('-')
     if posts == 1:
-        groups = get_groups(uname)
+        groups = get_subscribed_groups(uname)
         for i in range(len(groups)):
             if group[i]['group_id'] == group:
                 groups[i]['read_count'] += 1
@@ -125,7 +125,7 @@ def r(query, uname, group):
                     dump({'groups': groups}, fp=f)
 
     elif posts == 2:
-        groups = get_groups(uname)
+        groups = get_subscribed_groups(uname)
         for i in range(len(groups)):
             if groups[i]['group_id'] == group:
                 x = []
@@ -145,7 +145,7 @@ def s(uname, groupid, query):
     start = int(args[1])
     end = int(args[2])
     l = [i for i in range(start, end)]
-    groups = get_groups(uname)
+    groups = get_subscribed_groups(uname)
 
     for i in range(len(groups)):
         if groups[i]['group_id'] == groupid:
@@ -164,7 +164,7 @@ def u(uname, query, groupid):
     start = int(args[1])
     end = int(args[2])
     l = [i for i in range(start, end)]
-    groups = get_groups(uname)
+    groups = get_subscribed_groups(uname)
     x=[]
     for i in range(len(groups)):
         if groups[i]['group_id'] == groupid:
@@ -179,7 +179,7 @@ def u(uname, query, groupid):
 
 
 def check_group(uname, gname):
-    groups = get_groups(uname)
+    groups = get_subscribed_groups(uname)
     for g in groups:
         if g['group_name'] == gname:
             return g['group_id']

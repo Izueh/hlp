@@ -8,7 +8,7 @@ writingLock = {}
 readingLock = {}
 
 
-def get_groups():
+def get_all_groups():
     while hlpdb in writingLock and writingLock[hlpdb]:
         time.sleep(1)
     with open(hlpdb) as f:
@@ -24,7 +24,7 @@ def ag(data):
     data = data.split(' ')
     ugroups = [int(g) for g in data[3].split('\5')]
     response = ''
-    groups = get_groups()
+    groups = get_all_groups()
     for i in range(int(data[1]), int(data[2])):
         if i > len(groups):
             break
@@ -36,7 +36,7 @@ def ag(data):
 
 def p(data):
     query, gID, author, subject, content = data.split('\5')
-    groups = get_groups()
+    groups = get_all_groups()
     for i in range(len(groups)):
         if groups[i]['group_id'] == gID:
             groups[i]['post_count'] += 1
@@ -73,7 +73,7 @@ def sg(data):
     data = ''
     response = ''
     #obtaining all discussion groups
-    groups = get_groups()
+    groups = get_all_groups()
     #formatting response in format:
     #<id>.    <unread posts>   <groups title>
     for i in range(int(data[1]),int(data[2])+int(data[1])):
@@ -91,7 +91,7 @@ def rg(data):
     ugroups = int(usergroups[3].split('\5'))
     pids = ugroups[1].split('\r\n')
     gid = ugroups[0]
-    groups = get_groups()
+    groups = get_all_groups()
     response = ''
 
     for g in groups:
