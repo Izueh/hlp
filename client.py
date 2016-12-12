@@ -72,7 +72,7 @@ def internal_ag(sock, username):
         elif instruction == 'n':
             pass
         elif instruction == 'q':
-            pass
+            return
         else:
             print(INVALID_INPUT.format(data))
 
