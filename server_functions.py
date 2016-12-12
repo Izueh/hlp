@@ -66,12 +66,6 @@ def sg(data):
         #populating above
         ugroups.append(int(groups_read_count[x]))
         read_count.append(int(groups_read_count[x+1]))
-
-def sg(data):
-    data = data.split(' ')
-    ugroups = [int(g) for g in data[3].split('\5')]
-    data = ''
-    response = ''
     #obtaining all discussion groups
     groups = get_all_groups()
     #formatting response in format:
