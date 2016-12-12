@@ -37,8 +37,8 @@ def not_logged_in():
     print(HELP)
 
 
-def optional_size(line, start):
-    n = line.split(' ')
+def optional_size(data, start):
+    n = data.split(' ')
     size = 10
     if len(n) > 1:
         if n[1].isdigit():
@@ -48,24 +48,24 @@ def optional_size(line, start):
     return str(size + start)
 
 
-def ag(user, line, n):
-    size = optional_size(line, n)
+def ag(user, data, n):
+    size = optional_size(data, n)
     groups = get_groups(user)
     data = 'ag ' + n + ' ' + size + '\5'.join(str(g['group_id']) for g in groups)
     return data
 
 
-def sg(user, line, n):
-    size = optional_size(line, n)
+def sg(user, data, n):
+    size = optional_size(data, n)
     groups = get_groups(user)
-    #with optional size N of size and offset of n (really need to change variable names)
-    #we have output: 'sg 4 7 1\x0520\x052\x0510'
-    data = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id'])+'\5'+str(g['read_count']) for g in groups))
+    # with optional size N of size and offset of n (really need to change variable names)
+    # we have output: 'sg 4 7 1\x0520\x052\x0510'
+    data = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id']) + '\5' + str(g['read_count']) for g in groups))
     return data
 
 
-def rg(line, user, n):
-    n = line.split(' ')
+def rg(data, user, n):
+    n = data.split(' ')
     size = 10
     gname = ''
     if len(n) <= 1:
@@ -105,13 +105,13 @@ def get_groups(uname):
         return load(fp=f)['groups']
 
 
-def p(uname, query, groupid, subject, content):
-    data = '\5'.join([query, groupid, uname, subject, content])
+def p(uname, data, groupid, subject, content):
+    data = '\5'.join([data, groupid, uname, subject, content])
     return data
 
 
-def r(query, uname, group):
-    posts = query.split(' ')[1].split('-')
+def r(data, uname, group):
+    posts = data.split(' ')[1].split('-')
     if posts == 1:
         groups = get_groups(uname)
         for i in range(len(groups)):
@@ -140,8 +140,8 @@ def r(query, uname, group):
                         dump({'groups': groups}, fp=f)
 
 
-def s(uname, groupid, query):
-    args = query.split(' ')
+def s(uname, groupid, data):
+    args = data.split(' ')
     start = int(args[1])
     end = int(args[2])
     l = [i for i in range(start, end)]
@@ -159,13 +159,13 @@ def s(uname, groupid, query):
         dump({'groups': groups}, fp=f, indent=True)
 
 
-def u(uname, query, groupid):
-    args = query.split(' ')
+def u(uname, data, groupid):
+    args = data.split(' ')
     start = int(args[1])
     end = int(args[2])
     l = [i for i in range(start, end)]
     groups = get_groups(uname)
-    x=[]
+    x = []
     for i in range(len(groups)):
         if groups[i]['group_id'] == groupid:
             for j in range(len(groups[i]['read_posts'])):
@@ -185,4 +185,3 @@ def check_group(uname, gname):
             return g['group_id']
         else:
             raise ValueError("Not subscribed to group: ", gname)
-
