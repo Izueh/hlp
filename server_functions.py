@@ -2,7 +2,6 @@ import time
 import datetime
 from json import dump, load
 
-from collections import OrderedDict
 
 hlpdb = 'data/data.json'
 writingLock = {}
@@ -35,7 +34,6 @@ def ag(usergroups):
     data.rstrip()
     return data
 
-
 def p(data):
     query, gID, author, subject, content = data.split('\5')
     groups = get_group()
@@ -57,21 +55,35 @@ def p(data):
             writingLock.pop(hlpdb)
             return groups[i]
 
+def sg(data):
+    #input does not only contain usergroups
+    #of the form: 'sg 4 7 1\x0520\x052\x0510'
+    data = data.split(' ')
+    groups_read_count = data[3].split('\5')
+    ugroups = [] #ids of subscribed groups
+    read_count = [] #count of posts read
+    for x in range(0, len(groups_read_count)-1, 2):
+        #populating above
+        ugroups.append(int(groups_read_count[x]))
+        read_count.append(int(groups_read_count[x+1]))
 
 def sg(usergroups):
     usergroups = usergroups.split(' ')
     ugroups = [int(g) for g in usergroups[3].split('\5')]
     data = ''
+    response = ''
+    #obtaining all discussion groups
     groups = get_group()
-    for i in range(int(usergroups[1]), int(usergroups[2])):
-        if i > len(groups):
+    #formatting response in format:
+    #<id>.    <unread posts>   <groups title>
+    for i in range(int(data[1]),int(data[2])+int(data[1])):
+        if i >= len(groups):
             break
         if groups[i]['group_id'] in ugroups:
-            data += '%d. (%s) %s' % \
-                    (groups[i]['group_id'], 's' if groups[i]['group_id'] in ugroups else ' ', groups[i]['group_id'])
-            data += '\n'
-    data.rstrip()
-    return data
+            response += '%d. %d %s\n' % \
+                    (i,groups[i]['post_count']-read_count[i], groups[i]['title'])
+    response.rstrip()
+    return response
 
 
 def rg(usergroup):

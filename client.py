@@ -30,9 +30,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             continue
         elif instruction == 'ag':
             if is_logged_in(username): 
-                response = ag(data, username)
-                respond_to_server(sock, response)
-                internal_ag(sock, username)
+                internal_ag(sock, username, data)
                 continue
             else:
                 not_logged_in()
@@ -61,6 +59,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
 
 def internal_ag(sock, username):
     n = 0
+    response = ag(username, data, n)
+    respond_to_server(sock, response)
+    received = receive_from_server(sock)
+    print(received)
     data = sys.stdin.readline()
     instruction = data.split(' ')[0]
 
@@ -72,9 +74,10 @@ def internal_ag(sock, username):
         elif instruction == 'n':
             pass
         elif instruction == 'q':
-            pass
+            return
         else:
             print(INVALID_INPUT.format(data))
+            print(HELP)
 
 def receive_from_server(sock):
     try:
