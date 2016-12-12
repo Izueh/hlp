@@ -60,8 +60,8 @@ def sg(user, line, n):
     groups = get_groups(user)
     #with optional size N of size and offset of n (really need to change variable names)
     #we have output: 'sg 4 7 1\x0520\x052\x0510'
-    data = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id'])+'\5'+str(g['read_count']) for g in groups))
-    return data
+    response = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id'])+'\5'+str(g['read_count']) for g in groups))
+    return response
 
 
 def rg(line, user, n):
@@ -78,9 +78,9 @@ def rg(line, user, n):
             size = int(n[2])
         else:
             raise TypeError("Non-digit input was provided: ", size)
-    data = 'rg ' + size + ' ' + n + ' ' + '\5' + gid
-    data += get_posts
-    return data
+    response = 'rg ' + size + ' ' + n + ' ' + '\5' + gid
+    response += get_posts
+    return response
 
 
 def check_user(user):
@@ -92,12 +92,12 @@ def check_user(user):
 
 def get_posts(uname, gname):
     groups = get_groups(uname)
-    data = '\5'
+    response = '\5'
     for g in groups:
         if g['group_name'] == gname:
             for p in g['read_posts']:
-                data += '\r\n' + p['post_id']
-    return data
+                response += '\r\n' + p['post_id']
+    return response
 
 
 def get_groups(uname):
@@ -106,8 +106,8 @@ def get_groups(uname):
 
 
 def p(uname, query, groupid, subject, content):
-    data = '\5'.join([query, groupid, uname, subject, content])
-    return data
+    response = '\5'.join([query, groupid, uname, subject, content])
+    return response
 
 
 def r(query, uname, group):
