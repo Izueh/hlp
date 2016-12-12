@@ -51,8 +51,8 @@ def optional_size(line, start):
 def ag(user, line, n):
     size = optional_size(line, n)
     groups = get_groups(user)
-    data = 'ag ' + n + ' ' + size + '\5'.join(str(g['group_id']) for g in groups)
-    return data
+    response = 'ag ' + n + ' ' + size + '\5'.join(str(g['group_id']) for g in groups)
+    return response
 
 
 def sg(user, line, n):
