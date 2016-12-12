@@ -35,7 +35,8 @@ def ag(data):
 
 
 def p(data):
-    query, gID, author, subject, content = data.split('\5')
+    gID, author, subject, content = data[2:].split('\5')
+    gID=int(gID)
     groups = get_all_groups()
     for i in range(len(groups)):
         if groups[i]['group_id'] == gID:
@@ -47,7 +48,7 @@ def p(data):
                 'date': datetime.datetime.now().strftime('%b %d %X'),
                 'content': content
             })
-            while hlpdb in writingLock or writingLock[hlpdb] or hlpdb in readingLock or readingLock[hlpdb]:
+            while hlpdb in writingLock or hlpdb in readingLock:
                 time.sleep(1)
             writingLock[hlpdb] = True
             with open(hlpdb, 'w') as f:

@@ -1,7 +1,7 @@
 import socket
 import threading
 import socketserver
-
+import server_functions
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
@@ -13,7 +13,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
         while(True):
             
-            data = str(self.request.recv(1024), 'ascii')
+            data = str(self.request.recv(1024), 'utf-8')
             instruction = data.split(' ')[0]
             if instruction == 'sg':
                 response = sg(data)
@@ -21,11 +21,15 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
                 response = ag(data)
             elif instruction == 'rg':
                 response = rg(data)
+            elif instruction == 'p':
+                response = p(data)
+            elif instruction == 'rp':
+                response = rp(data)
             else:
                 self.request.sendall(bytes(INVALID_INPUT.format(data)))
                 continue
 
-            self.request.sendall(bytes(response))
+            self.request.sendall(bytes(response,'utf-8'))
             
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):

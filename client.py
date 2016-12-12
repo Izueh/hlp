@@ -1,11 +1,12 @@
 from socket import error as SocketError
 import socket
 import sys
-import client_functions
+from client_functions import ag, HELP, sg, rg, is_logged_in, not_logged_in, login
 
 HOST, PORT = "localhost", 9999
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
 ALREADY_LOGGED_IN = "Already logged in as {}. Please log out if you want to log in again.\n"
+
 previous_ag_sg_response = ''
 
 # Create a socket (SOCK_STREAM means a TCP socket)
@@ -13,11 +14,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     sock.connect((HOST, PORT))
     username = None
 
-    while(True):
+    while (True):
         # Connect to server and send data
         data = sys.stdin.readline()
         instruction = data.split(' ')[0]
-        response=''
+        response = ''
         if instruction == 'login':
             if is_logged_in(username):
                 print(ALREADY_LOGGED_IN.format(username))
@@ -29,7 +30,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             print(HELP)
             continue
         elif instruction == 'ag':
-            if is_logged_in(username): 
+            if is_logged_in(username):
                 internal_ag(sock, username, data, True)
                 continue
             else:
@@ -95,6 +96,7 @@ def internal_rg(sock, username, data):
             print(HELP)
 
 
+
 def internal_ag(sock, username, is_ag):
     n = 0
     if is_ag:
@@ -108,7 +110,6 @@ def internal_ag(sock, username, is_ag):
     while(True):
         data = sys.stdin.readline()
         instruction = data.split(' ')[0]
-
         if is_ag and instruction == 's':
             pass
         elif instruction == 'u':
@@ -128,6 +129,7 @@ def internal_ag(sock, username, is_ag):
             print(HELP)
         print(receive_from_server(sock))
 
+
 def receive_from_server(sock):
     try:
         received = str(sock.recv(1024), "utf-8")
@@ -135,6 +137,7 @@ def receive_from_server(sock):
         print(e)
 
     return received
+
 
 def respond_to_server(sock, response):
     try:

@@ -107,8 +107,11 @@ def get_subscribed_groups(uname):
         return load(fp=f)['groups']
 
 
-def p(uname, data, groupid, subject, content):
-    response = '\5'.join([data, groupid, uname, subject, content])
+def p(uname, data, groupid):
+    subject = input('Subject: ')
+    content = input('Content: ')
+
+    response = data + ' ' + '\5'.join([groupid, uname, subject, content])
     return response
 
 
@@ -177,8 +180,6 @@ def check_subscription(username, gid):
             return True
     raise False
 
-
 def rp(groupid, data):
     return '\5'.join(['rp',groupid,data])
-
 
