@@ -1,7 +1,7 @@
 from socket import error as SocketError
 import socket
 import sys
-from client_functions import ag, HELP, sg, rg, is_logged_in, not_logged_in, login
+import client_functions
 
 HOST, PORT = "localhost", 9999
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
