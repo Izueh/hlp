@@ -8,7 +8,7 @@ writingLock = {}
 readingLock = {}
 
 
-def get_group():
+def get_groups():
     while hlpdb in writingLock and writingLock[hlpdb]:
         time.sleep(1)
     with open(hlpdb) as f:
@@ -20,23 +20,23 @@ def get_group():
     return groups
 
 
-def ag(usergroups):
-    usergroups = usergroups.split(' ')
-    ugroups = [int(g) for g in usergroups[3].split('\5')]
-    data = ''
-    groups = get_group()
-    for i in range(int(usergroups[1]), int(usergroups[2])):
+def ag(data):
+    data = data.split(' ')
+    ugroups = [int(g) for g in data[3].split('\5')]
+    response = ''
+    groups = get_groups()
+    for i in range(int(data[1]), int(data[2])):
         if i > len(groups):
             break
-        data += '%d. (%s) %s' % \
+        response += '%d. (%s) %s' % \
                 (groups[i]['group_id'], 's' if groups[i]['group_id'] in ugroups else ' ', groups[i]['group_id'])
-        data += '\n'
-    data.rstrip()
-    return data
+        response += '\n'
+    response.rstrip()
+    return response
 
 def p(data):
     query, gID, author, subject, content = data.split('\5')
-    groups = get_group()
+    groups = get_groups()
     for i in range(len(groups)):
         if groups[i]['group_id'] == gID:
             groups[i]['post_count'] += 1
@@ -67,13 +67,13 @@ def sg(data):
         ugroups.append(int(groups_read_count[x]))
         read_count.append(int(groups_read_count[x+1]))
 
-def sg(usergroups):
-    usergroups = usergroups.split(' ')
-    ugroups = [int(g) for g in usergroups[3].split('\5')]
+def sg(data):
+    data = data.split(' ')
+    ugroups = [int(g) for g in data[3].split('\5')]
     data = ''
     response = ''
     #obtaining all discussion groups
-    groups = get_group()
+    groups = get_groups()
     #formatting response in format:
     #<id>.    <unread posts>   <groups title>
     for i in range(int(data[1]),int(data[2])+int(data[1])):
@@ -86,13 +86,13 @@ def sg(usergroups):
     return response
 
 
-def rg(usergroup):
-    usergroups = usergroup.split('\5')
+def rg(data):
+    usergroups = data.split('\5')
     ugroups = int(usergroups[3].split('\5'))
     pids = ugroups[1].split('\r\n')
     gid = ugroups[0]
-    groups = get_group()
-    data = ''
+    groups = get_groups()
+    response = ''
 
     for g in groups:
         if g['group_id'] == gid:
@@ -110,8 +110,8 @@ def rg(usergroup):
                     read = ' '
                     if x[i]['post_id'] in pids:
                         read = 'N'
-                    data += '%d. %s %s %s' % \
+                    response += '%d. %s %s %s' % \
                             (post['post_id'], read, post['date'], post['content'])
-                    data += '\n'
-    data.rstrip()
-    return data
+                    response += '\n'
+    response.rstrip()
+    return response
