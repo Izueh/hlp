@@ -1,7 +1,7 @@
 import socket
 import threading
 import socketserver
-import server_functions
+from server_functions import sg,ag ,p ,rp,rg
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
