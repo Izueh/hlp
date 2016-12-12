@@ -50,18 +50,18 @@ def optional_size(data, start):
 
 def ag(user, data, n):
     size = optional_size(data, n)
-    groups = get_groups(user)
-    data = 'ag ' + n + ' ' + size + '\5'.join(str(g['group_id']) for g in groups)
-    return data
+    groups = get_subscribed_groups(user)
+    response = 'ag ' + n + ' ' + size + '\5'.join(str(g['group_id']) for g in groups)
+    return response
 
 
 def sg(user, data, n):
     size = optional_size(data, n)
-    groups = get_groups(user)
+    groups = get_subscribed_groups(user)
     # with optional size N of size and offset of n (really need to change variable names)
     # we have output: 'sg 4 7 1\x0520\x052\x0510'
-    data = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id']) + '\5' + str(g['read_count']) for g in groups))
-    return data
+    response = 'sg ' + size + ' ' + n + ' ' + '\5'.join((str(g['group_id']) + '\5' + str(g['read_count']) for g in groups))
+    return response
 
 
 def rg(data, user, n):
@@ -78,9 +78,9 @@ def rg(data, user, n):
             size = int(n[2])
         else:
             raise TypeError("Non-digit input was provided: ", size)
-    data = 'rg ' + size + ' ' + n + ' ' + '\5' + gid
-    data += get_posts
-    return data
+    response = 'rg ' + size + ' ' + n + ' ' + '\5' + gid
+    response += get_posts
+    return response
 
 
 def check_user(user):
@@ -91,29 +91,29 @@ def check_user(user):
 
 
 def get_posts(uname, gname):
-    groups = get_groups(uname)
+    groups = get_subscribed_groups(uname)
     data = '\5'
     for g in groups:
         if g['group_name'] == gname:
             for p in g['read_posts']:
-                data += '\r\n' + p['post_id']
-    return data
+                response += '\r\n' + p['post_id']
+    return response
 
 
-def get_groups(uname):
+def get_subscribed_groups(uname):
     with open(uname + '.json') as f:
         return load(fp=f)['groups']
 
 
 def p(uname, data, groupid, subject, content):
-    data = '\5'.join([data, groupid, uname, subject, content])
-    return data
+    response = '\5'.join([data, groupid, uname, subject, content])
+    return response
 
 
 def r(data, uname, group):
     posts = data.split(' ')[1].split('-')
     if posts == 1:
-        groups = get_groups(uname)
+        groups = get_subscribed_groups(uname)
         for i in range(len(groups)):
             if group[i]['group_id'] == group:
                 groups[i]['read_count'] += 1
@@ -125,7 +125,7 @@ def r(data, uname, group):
                     dump({'groups': groups}, fp=f)
 
     elif posts == 2:
-        groups = get_groups(uname)
+        groups = get_subscribed_groups(uname)
         for i in range(len(groups)):
             if groups[i]['group_id'] == group:
                 x = []
@@ -145,7 +145,7 @@ def s(uname, groupid, data):
     start = int(args[1])
     end = int(args[2])
     l = [i for i in range(start, end)]
-    groups = get_groups(uname)
+    groups = get_subscribed_groups(uname)
 
     for i in range(len(groups)):
         if groups[i]['group_id'] == groupid:
@@ -164,8 +164,8 @@ def u(uname, data, groupid):
     start = int(args[1])
     end = int(args[2])
     l = [i for i in range(start, end)]
-    groups = get_groups(uname)
-    x = []
+    groups = get_subscribed_groups(uname)
+    x=[]
     for i in range(len(groups)):
         if groups[i]['group_id'] == groupid:
             for j in range(len(groups[i]['read_posts'])):
@@ -179,9 +179,10 @@ def u(uname, data, groupid):
 
 
 def check_group(uname, gname):
-    groups = get_groups(uname)
+    groups = get_subscribed_groups(uname)
     for g in groups:
         if g['group_name'] == gname:
             return g['group_id']
         else:
             raise ValueError("Not subscribed to group: ", gname)
+
