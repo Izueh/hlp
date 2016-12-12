@@ -75,6 +75,7 @@ def internal_rg(sock, username, data):
     gname = data.split(' ')[1]
     gid = gid_from_gname(gname)
     response = rg(username, data, gid, offset)
+    offset = offset + 1
     respond_to_server(sock, response)
     received = receive_from_server(sock)
 
@@ -82,18 +83,20 @@ def internal_rg(sock, username, data):
         data = sys.stdin.readline()
         instruction = data.split(' ')[0]
         if instruction.isdigit():
-            pass
+            response = rp(gid, data)
         elif instruction == 'r':
-            pass
+            response = r(data, username, gid)
         elif instruction == 'n':
-            pass
+            response = rg(username, data, gid, offset)
         elif instruction == 'p':
-            pass
+            response = p(username, data, gid)
         elif instruction == 'q':
             break
         else:
             print(INVALID_INPUT.format(data))
             print(HELP)
+        respond_to_server(sock, response)
+        print(receive_from_server(sock))
 
 
 
@@ -103,6 +106,7 @@ def internal_ag(sock, username, is_ag):
         previous_ag_sg_response = response = ag(username, data, n)
     else:
         previous_ag_sg_response = response = sg(username, data, n)
+    n = n + 1
     respond_to_server(sock, response)
     received = receive_from_server(sock)
     print(received)
@@ -111,22 +115,25 @@ def internal_ag(sock, username, is_ag):
         data = sys.stdin.readline()
         instruction = data.split(' ')[0]
         if is_ag and instruction == 's':
-            pass
+            s(username, data)
+            continue
         elif instruction == 'u':
-            pass
+            u(username, data)
+            continue
+        elif instruction == 'r':
+            r(username, data, gid)
         elif instruction == 'n':
             if is_ag:
                 previous_ag_sg_response = response = ag(username, data, n)
             else:
                 previous_ag_sg_response = response = sg(username, data, n)
-            respond_to_server(sock, response)
             n = n + 1
-            continue
         elif instruction == 'q':
             return
         else:
             print(INVALID_INPUT.format(data))
             print(HELP)
+        respond_to_server(sock, response)
         print(receive_from_server(sock))
 
 
