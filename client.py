@@ -30,14 +30,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             continue
         elif instruction == 'ag':
             if is_logged_in(username): 
-                internal_ag(sock, username, data)
+                internal_ag(sock, username, data, True)
                 continue
             else:
                 not_logged_in()
                 continue
         elif instruction == 'sg':
             if is_logged_in(username):
-                response = sg(data, username)
+                internal_ag(sock, username, data, False)
+                continue
             else:
                 not_logged_in()
                 continue
@@ -57,9 +58,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         else:
             print(INVALID_INPUT.format(data))
 
-def internal_ag(sock, username):
+def internal_ag(sock, username, is_ag):
     n = 0
-    response = ag(username, data, n)
+    if is_ag:
+        response = ag(username, data, n)
+    else:
+        response = sg(username, data, n)
     respond_to_server(sock, response)
     received = receive_from_server(sock)
     print(received)
@@ -67,17 +71,24 @@ def internal_ag(sock, username):
     instruction = data.split(' ')[0]
 
     while(True):
-        if instruction == 's':
+        if is_ag and instruction == 's':
             pass
         elif instruction == 'u':
             pass
         elif instruction == 'n':
-            pass
+            if is_ag:
+                response = ag(username, data, n)
+            else:
+                response = sg(username, data, n)
+            respond_to_server(sock, response)
+            n = n + 1
+            continue
         elif instruction == 'q':
             return
         else:
             print(INVALID_INPUT.format(data))
             print(HELP)
+        print(receive_from_server(sock))
 
 def receive_from_server(sock):
     try:
