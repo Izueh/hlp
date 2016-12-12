@@ -1,25 +1,24 @@
 {
-  "groups": [
-    {
-      "group_id": 1,
-      "group_name": "Discussion Group A",
-      "read_count": 1,
-      "read_posts": [
+    "groups": [
         {
-          "post_id": 1
-        }
-      ]
-    },
-    {
-      "group_id": 4,
-      "group_name": "Discussion Group B",
-      "read_count": 1,
-      "read_posts": [
+            "read_count": 1,
+            "group_name": "Discussion Group A",
+            "read_posts": [
+                {
+                    "post_id": 1
+                }
+            ],
+            "group_id": 1
+        },
         {
-          "post_id": 1
+            "read_count": 1,
+            "group_name": "Discussion Group B",
+            "read_posts": [
+                {
+                    "post_id": 1
+                }
+            ],
+            "group_id": 4
         }
-      ]
-    }
-  ]
+    ]
 }
-

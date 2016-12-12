@@ -61,6 +61,7 @@ def sg(user, line, n):
     data = 'sg ' + str(n) + ' ' + size + ' ' + '\5'.join((str(g['group_id']) for g in groups))
     return data
 
+
 def rg(line, user, n):
     n = line.split(' ')
     size = 10
@@ -86,6 +87,7 @@ def check_user(user):
             obj = {'groups': []}
             dump(obj=obj, fp=f, indent=2)
 
+
 def get_posts(uname, gname):
     groups = get_groups(uname)
     data = '\5'
@@ -94,6 +96,7 @@ def get_posts(uname, gname):
             for p in g['read_posts']:
                 data += '\r\n' + p['post_id']
     return data
+
 
 def get_groups(uname):
     with open(uname + '.json') as f:
@@ -105,19 +108,19 @@ def p(uname, query, groupid, subject, content):
     return data
 
 
-def r(query,uname,group):
+def r(query, uname, group):
     posts = query.split(' ')[1].split('-')
     if posts == 1:
-        groups=get_groups(uname)
+        groups = get_groups(uname)
         for i in range(len(groups)):
-            if group[i]['group_id']==group:
-                groups[i]['read_count']+=1
+            if group[i]['group_id'] == group:
+                groups[i]['read_count'] += 1
                 for p in groups[i]['read_posts']:
-                    if p['post_id']==posts[0]:
+                    if p['post_id'] == posts[0]:
                         return
-                groups['read_post'].append({'post_id':posts[0]})
-                with open(uname+'.json','w') as f:
-                    dump({'groups':groups}, fp=f)
+                groups['read_post'].append({'post_id': posts[0]})
+                with open(uname + '.json', 'w') as f:
+                    dump({'groups': groups}, fp=f)
 
     elif posts == 2:
         groups = get_groups(uname)
@@ -126,17 +129,51 @@ def r(query,uname,group):
                 x = []
                 for j in range(len(groups[i]['read_posts'])):
                     if groups[i]['read_posts'][j]['post_id'] != posts[0] \
-                            and int(posts[0])<groups[i]['read_posts'][j]['post_id']<int(posts[1]):
+                            and int(posts[0]) < groups[i]['read_posts'][j]['post_id'] < int(posts[1]):
                         x.append(groups[i]['read_posts'][j]['post_id'])
-                    groups[i]['read_count']+=len(x)
+                    groups[i]['read_count'] += len(x)
                 for num in x:
-                    groups[i]['read_posts'].append({'post_id':num})
-                    with open(uname+'.json','w') as f:
-                        dump({'groups':group}, fp=f)
+                    groups[i]['read_posts'].append({'post_id': num})
+                    with open(uname + '.json', 'w') as f:
+                        dump({'groups': groups}, fp=f)
 
 
+def s(uname, groupid, query):
+    args = query.split(' ')
+    start = int(args[1])
+    end = int(args[2])
+    l = [i for i in range(start, end)]
+    groups = get_groups(uname)
+
+    for i in range(len(groups)):
+        if groups[i]['group_id'] == groupid:
+            for j in groups[i]['read_posts']:
+                if j['post_id'] in l:
+                    l.remove(j['post_id'])
+            for j in l:
+                groups[i]['read_posts'].append({'post_id': j})
+
+    with open(uname + '.json', 'w') as f:
+        dump({'groups': groups}, fp=f, indent=True)
 
 
+def u(uname, query, groupid):
+    args = query.split(' ')
+    start = int(args[1])
+    end = int(args[2])
+    l = [i for i in range(start, end)]
+    groups = get_groups(uname)
+    x=[]
+    for i in range(len(groups)):
+        if groups[i]['group_id'] == groupid:
+            for j in range(len(groups[i]['read_posts'])):
+                if groups[i]['read_posts'][j]['post_id'] in l:
+                    x.append(groups[i]['read_posts'][j])
+            for o in x:
+                groups[i]['read_posts'].remove(o)
+
+    with open(uname + '.json', 'w') as f:
+        dump({'groups': groups}, fp=f, indent=4)
 
 
 def check_group(uname, gname):
@@ -146,3 +183,4 @@ def check_group(uname, gname):
             return g['group_id']
         else:
             raise ValueError("Not subscribed to group: ", gname)
+
