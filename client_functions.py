@@ -89,7 +89,7 @@ def check_user(user):
     if user + '.json' not in listdir('./'):
         with open(user + '.json', 'w') as f:
             obj = {'groups': []}
-            dump(obj=obj, fp=f, indent=2)
+            dump(obj=obj, fp=f, indent=4)
 
 
 def get_posts(username, gid):
@@ -117,8 +117,12 @@ def p(uname, data, groupid):
 
 def r(uname, data, groupid):
     args = data.split(' ')
-    start = int(args[1])
-    end = int(args[2])
+    if len(args) == 2:
+        start = int(args[1])
+        end = int(args[1])
+    elif len(args) == 3:
+        start = int(args[1])
+        end = int(args[2]) + 1
     l = [i for i in range(start, end)]
     groups = get_subscribed_groups(uname)
 
@@ -136,17 +140,22 @@ def r(uname, data, groupid):
 
 def s(uname, data):
     args = data.split(' ')
-    start = int(args[1])
-    end = int(args[2]) + 1
+    if len(args)==2:
+        start = int(args[1])
+        end = int(args[1])
+    elif len(args)== 3:
+        start = int(args[1])
+        end = int(args[2]) + 1
     l = [i for i in range(start, end)]
     groups = get_subscribed_groups(uname)
-    x = []
+    x = [] # list of items that are duplicates
     for i in range(len(groups)):
-        if groups[i]['group_id'] in l:
+        if groups[i]['group_id'] in l: # add only those that are not already added, prevent duplication
             x.append(groups[i]['group_id'])
-    for o in x:
+    for o in x: #remove groups alreayd in subscribed group from l
         l.remove(o)
     for i in l:
+        #add the remaining items
         groups.append({
             'group_id': i,
             'read_count': 0,
@@ -159,13 +168,18 @@ def s(uname, data):
 
 def u(uname, data):
     args = data.split(' ')
-    start = int(args[1])
-    end = int(args[2]) + 1
+    if len(args) == 2:
+        start = int(args[1])
+        end = int(args[1])
+    elif len(args) == 3:
+        start = int(args[1])
+        end = int(args[2]) + 1
     l = [i for i in range(start, end)]
     groups = get_subscribed_groups(uname)
-    x = []
+    x = [] # groups to be removed
     for i in range(len(groups)):
-        if groups[i]['group_id'] in l:
+        #only remove groups that the user is actually subscribed to.
+        if groups[i]['group_id'] in l: #add groups to be removed into x, need this because can't erase by index since indices shift on removal
             x.append(groups[i])
     for o in x:
         groups.remove(o)
