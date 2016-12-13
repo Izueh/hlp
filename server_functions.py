@@ -142,7 +142,8 @@ def rg(data):
 # @param data raw input given from client to server
 # @return formatted string to reply to client
 def rp(data):
-    query, groupid, postid = data.split('\5')
+
+    groupid, postid = data.split(' ')[1].split('\5')
     groups = get_all_groups()
     for g in groups:
         if g['group_id']==groupid:

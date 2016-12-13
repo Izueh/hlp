@@ -255,5 +255,5 @@ def check_subscription(username, gid):
 # @param data raw input provided by user
 # @return formatted string to send to server side 'rp'
 def rp(gid, data):
-    return '\5'.join(['rp',str(gid),data])
+    return 'rp '+'\5'.join([str(gid),data])
 
