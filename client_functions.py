@@ -160,7 +160,7 @@ def s(uname, data):
 def u(uname, data):
     args = data.split(' ')
     start = int(args[1])
-    end = int(args[2])
+    end = int(args[2]) + 1
     l = [i for i in range(start, end)]
     groups = get_subscribed_groups(uname)
     x = []
@@ -169,7 +169,7 @@ def u(uname, data):
             x.append(groups[i])
     for o in x:
         groups.remove(o)
-    with open(uname + '.json') as f:
+    with open(uname + '.json', 'w') as f:
         dump({'groups': groups}, fp=f, indent=4)
 
 

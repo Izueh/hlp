@@ -59,7 +59,7 @@ def internal_ag(sock, username, data, is_ag):
     print(received)
 
     while (True):
-        data = sys.stdin.readline()
+        data = sys.stdin.readline().rstrip()
         instruction = data.split(' ')[0]
         if is_ag and instruction == 's':
             s(username, data)
@@ -101,7 +101,7 @@ def respond_to_server(sock, response):
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     sock.connect((HOST, PORT))
     username = None
-
+    print(receive_from_server(sock))
     while (True):
         # Connect to server and send data
         data = sys.stdin.readline().rstrip()
