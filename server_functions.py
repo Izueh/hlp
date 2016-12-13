@@ -104,15 +104,14 @@ def sg(data):
 # @return formatted string to reply to client
 def rg(data):
     usergroups = data.split('\5')
-    query,start,end = usergroups[0].split(' ')
-    start = int(start)
-    end = int(end)+1
+    args = usergroups[0].split(' ')
+    start = int(args[2])
+    end = int(args[1])+1
 
     #format of usergroups for no read posts in group with id of 1
     #['rg 10 0 ', '1', '']
-    ugroups = int(usergroups[1].split('\5'))
-    pids = ugroups[2].split('\r\n') if ugroups[2] is not '' else []
-    gid = ugroups[1]
+    pids = usergroups[2].split('\r\n') if usergroups[2] is not '' else []
+    gid = usergroups[1]
     groups = get_all_groups()
     response = ''
 
