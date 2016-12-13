@@ -34,6 +34,8 @@ def internal_rg(sock, username, data):
     offset = offset + 1
     respond_to_server(sock, response)
     received = receive_from_server(sock)
+    print(received)
+
 
     while (True):
         data = sys.stdin.readline()

@@ -111,7 +111,7 @@ def rg(data):
     #format of usergroups for no read posts in group with id of 1
     #['rg 10 0 ', '1', '']
     pids = usergroups[2].split('\r\n') if usergroups[2] is not '' else []
-    gid = usergroups[1]
+    gid = int(usergroups[1])
     groups = get_all_groups()
     response = ''
 
@@ -134,7 +134,7 @@ def rg(data):
                     response += '%d. %s %s %s' % \
                                 (post['post_id'], read, post['date'], post['content'])
                     response += '\n'
-    response.rstrip()
+    response=response.rstrip()
     return response
 
 # server-side 'rp'. Parses client side 'rp' request 
