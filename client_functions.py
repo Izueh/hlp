@@ -60,7 +60,7 @@ def sg(user, data, n):
     groups = get_subscribed_groups(user)
     # with optional size N of size and offset of n (really need to change variable names)
     # we have output: 'sg 4 7 1\x0520\x052\x0510'
-    response = 'sg ' + size + ' ' + n + ' ' + '\5'.join(
+    response = 'sg ' + size + ' ' + str(n) + ' ' + '\5'.join(
         (str(g['group_id']) + '\5' + str(g['read_count']) for g in groups))
     return response
 
