@@ -6,7 +6,9 @@ hlpdb = 'data/data.json'
 writingLock = {}
 readingLock = {}
 
-
+# internal method used to obtain information on ALL discussion
+# groups in server
+# @return list of all discussion groups as dictionaries
 def get_all_groups():
     while hlpdb in writingLock and writingLock[hlpdb]:
         time.sleep(1)
@@ -18,7 +20,10 @@ def get_all_groups():
     readingLock.pop(hlpdb)
     return groups
 
-
+# server-side 'all groups'. Parses client side 'ag' request 
+# and formats response for client
+# @param data raw input given from client to server
+# @return formatted string to reply to client
 def ag(data):
     data = data.split(' ')
     ugroups = [int(g) for g in data[3].split('\5')] if data[3] is not '' else []
@@ -34,6 +39,10 @@ def ag(data):
     return response
 
 
+# server-side 'p'. Parses client side 'p' request 
+# and formats response for client
+# @param data raw input given from client to server
+# @return formatted string to reply to client 
 def p(data):
     gID, author, subject, content = data[2:].split('\5')
     gID=int(gID)
@@ -56,7 +65,10 @@ def p(data):
             writingLock.pop(hlpdb)
             return groups[i]
 
-
+# server-side 'subscribed groups'. Parses client side 'sg' request 
+# and formats response for client
+# @param data raw input given from client to server
+# @return formatted string to reply to client
 def sg(data):
     #input does not only contain usergroups
     #of the form: 'sg 4 7 1\x0520\x052\x0510'
@@ -84,9 +96,14 @@ def sg(data):
     response.rstrip()
     return response if response != "" else "Not subscribed to any groups"
 
-
+# server-side 'read group'. Parses client side 'rg' request 
+# and formats response for client
+# @param data raw input given from client to server
+# @return formatted string to reply to client
 def rg(data):
     usergroups = data.split('\5')
+    #format of usergroups for no read posts in group with id of 1
+    #['rg 10 0 ', '1', '']
     ugroups = int(usergroups[3].split('\5'))
     pids = ugroups[1].split('\r\n')
     gid = ugroups[0]
@@ -115,7 +132,10 @@ def rg(data):
     response.rstrip()
     return response
 
-
+# server-side 'rp'. Parses client side 'rp' request 
+# and formats response for client
+# @param data raw input given from client to server
+# @return formatted string to reply to client
 def rp(data):
     query, groupid, postid = data.split('\5')
     groups = get_all_groups()

@@ -10,15 +10,23 @@ ALREADY_LOGGED_IN = "Already logged in as {}. Please log out if you want to log 
 previous_ag_sg_response = ''
 
 
-# parses previous response to extract gid
+#parses output previously given to user
+# @param gname name of group of group to find ID of
+# return group_id of provided groupname
 def gid_from_gname(gname):
+    global previous_ag_sg_response
     lines = previous_ag_sg_response.split('\n')
     for line in lines:
         if gname in line:
             return int(line[0:1])
 
 
+# loop to consume input for subcommands of rg function
+# @param sock socket variable to communicate to server
+# @param username username of current user
+# @param data raw input given by user
 def internal_rg(sock, username, data):
+    intial_data = data #to be used in 'n'
     offset = 0
     gname = data.split(' ')[1]
     gid = gid_from_gname(gname)
@@ -35,7 +43,7 @@ def internal_rg(sock, username, data):
         elif instruction == 'r':
             response = r(data, username, gid)
         elif instruction == 'n':
-            response = rg(username, data, gid, offset)
+            response = rg(username, intial_data, gid, offset)
         elif instruction == 'p':
             response = p(username, data, gid)
         elif instruction == 'q':
@@ -43,19 +51,28 @@ def internal_rg(sock, username, data):
         else:
             print(INVALID_INPUT.format(data))
             print(HELP)
+            continue
         respond_to_server(sock, response)
         print(receive_from_server(sock))
 
 
+# loop to consume input for subcommands of ag and sg functions
+# @param sock socket variable to communicate to server
+# @param username username of current user
+# @param data raw input given by user
+# @param is_ag boolean to tell us whether the loop is handling subcommands for
+# ag or sg
 def internal_ag(sock, username, data, is_ag):
+    intial_data = data #to be used in 'n'
     n = 0
+    global previous_ag_sg_response
     if is_ag:
-        previous_ag_sg_response = response = ag(username, data, n)
+        response = ag(username, data, n)
     else:
-        previous_ag_sg_response = response = sg(username, data, n)
+        response = sg(username, data, n)
     n = n + 1
     respond_to_server(sock, response)
-    received = receive_from_server(sock)
+    previous_ag_sg_response = received = receive_from_server(sock)
     print(received)
 
     while (True):
@@ -69,19 +86,21 @@ def internal_ag(sock, username, data, is_ag):
             continue
         elif instruction == 'n':
             if is_ag:
-                previous_ag_sg_response = response = ag(username, data, n)
+                response = ag(username, intial_data, n)
             else:
-                previous_ag_sg_response = response = sg(username, data, n)
+                response = sg(username, intial_data, n)
             n += 1
+            respond_to_server(sock, response)
+            previous_ag_sg_response = received = receive_from_server(sock)
+            print(received)
         elif instruction == 'q':
             return
         else:
             print(INVALID_INPUT.format(data))
             print(HELP)
-        respond_to_server(sock, response)
-        print(receive_from_server(sock))
 
-
+# obtain input from server
+# @param sock socket variable to communicate with server
 def receive_from_server(sock):
     try:
         received = str(sock.recv(1024), "utf-8")
@@ -89,7 +108,9 @@ def receive_from_server(sock):
     except SocketError as e:
         print(e)
 
-
+# send response to server
+# @param sock socket variable to communicate with server
+# @param response string to send to server
 def respond_to_server(sock, response):
     try:
         sock.sendall(bytes(response, "utf-8"))
@@ -100,13 +121,15 @@ def respond_to_server(sock, response):
 # Create a socket (SOCK_STREAM means a TCP socket)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     sock.connect((HOST, PORT))
+    #used to keep track of current user
     username = None
     print(receive_from_server(sock))
     while (True):
-        # Connect to server and send data
+        # user input
         data = sys.stdin.readline().rstrip()
         instruction = data.split(' ')[0]
         response = ''
+        #if/else chain to route for proper usage
         if instruction == 'login':
             if is_logged_in(username):
                 print(ALREADY_LOGGED_IN.format(username))

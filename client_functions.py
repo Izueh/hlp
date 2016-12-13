@@ -22,21 +22,33 @@ HELP = '''Usage: COMMAND [ARG|SUBCOMMAND] [SUBCOMMAND]
     logout\tLogs out current user\n\n\n\n'''
 
 
+# login methods that checks if there's a user 
+# file for the current user on this machine
+# @param username current user's username
+# @param data raw input provided by user
+# @return username username of current user
 def login(username, data):
     username = data.split(' ')[1]
     check_user(username)
     return username
 
-
+# checks if there's someone currently logged in
+# @param username variable holding name of currently
+# logged in user
+# @return true if there's a user logged in, false otherwise.
 def is_logged_in(username):
     return False if username is None else True
 
-
+# provides feedback for operations in which user needs to log in
 def not_logged_in():
     print(NOT_LOGGED_IN)
     print(HELP)
 
-
+# checks if user provided optional size 'N'
+# @param data raw input given by user
+# @param start offset in case user is 'pagination'
+# @return offset to be used by server side functions for 
+# pagination
 def optional_size(data, start):
     n = data.split(' ')
     size = 10
@@ -48,13 +60,24 @@ def optional_size(data, start):
     return str(size + start)
 
 
+# 'all groups' function. Provides string with necessary information to obtain
+# list of currently subscribed groups from server.
+# @param user username of current user
+# @param data raw input given by user
+# @param n current offset (times we have already read the same content)
+# @return string to sent to server side 'ag'
 def ag(user, data, n):
     size = optional_size(data, n)
     groups = get_subscribed_groups(user)
     response = 'ag ' + str(n) + ' ' + size + ' ' + '\5'.join(str(g['group_id']) for g in groups)
     return response
 
-
+# 'subscribed groups' function. Provides string with necessary information to obtain
+# list of all groups from server
+# @param user username of current user
+# @param data raw input provided by user
+# @param n current offset (times we have already read the same content)
+# @return string to sent to server side 'sg'
 def sg(user, data, n):
     size = optional_size(data, n)
     groups = get_subscribed_groups(user)
@@ -65,6 +88,13 @@ def sg(user, data, n):
     return response
 
 
+# 'read group' function. Provides string with necessary information to obtain
+# posts in group
+# @param username username of current user
+# @param data raw input provided by user
+# @param gid id of current group
+# @param offset current offset (times we have already read the same content)
+# @return string to sent to server side 'rg'
 def rg(username, data, gid, offset):
     # data.split(' ') -> ['rg','group.name','5']
     data = data.split(' ')
@@ -80,18 +110,24 @@ def rg(username, data, gid, offset):
             n = data[2]
         else:
             raise TypeError("Non-digit input was provided: ", n)
-    response = 'rg ' + n + ' ' + str(offset) + ' ' + '\5' + str(gid)
+    response = 'rg ' + str(n) + ' ' + str(offset) + ' ' + '\5' + str(gid)
     response += get_posts(username, gid)
     return response
 
-
+# checks if a file already exists on local machine 
+# for the current user, creates one if necessary
+# @param user username of current user
 def check_user(user):
     if user + '.json' not in listdir('./'):
         with open(user + '.json', 'w') as f:
             obj = {'groups': []}
             dump(obj=obj, fp=f, indent=4)
 
-
+# gets list of current posts
+# @param username username of current user
+# @param gid group id of group from which to obtain posts
+# @return string containing IDs of all posts 
+# to attach to server response
 def get_posts(username, gid):
     groups = get_subscribed_groups(username)
     response = '\5'
@@ -101,12 +137,20 @@ def get_posts(username, gid):
                 response += '\r\n' + str(p['post_id'])
     return response
 
-
+# accesses local file to obtain the groups to which 
+# the current user is subscribed
+# @param uname username of current user
+# @return dictionary object containing subscribed groups
 def get_subscribed_groups(uname):
     with open(uname + '.json') as f:
         return load(fp=f)['groups']
 
-
+# obtains information for creation of new posts and formats string 
+# to send post information to server
+# @param uname username of current user
+# @param data raw input given by user
+# @param groupid ID of group to which user is posting
+# @return formatted string to sent to server side 'p'
 def p(uname, data, groupid):
     subject = input('Subject: ')
     content = input('Content: ')
@@ -115,6 +159,10 @@ def p(uname, data, groupid):
     return response
 
 
+# accesses local user file to 'mark a post as read'
+# @param uname username of current user
+# @param data raw input provided by user
+# @param groupid ID of group to which the post belongs
 def r(uname, data, groupid):
     args = data.split(' ')
     if len(args) == 2:
@@ -137,7 +185,9 @@ def r(uname, data, groupid):
     with open(uname + '.json', 'w') as f:
         dump({'groups': groups}, fp=f, indent=True)
 
-
+# accesses local user file to 'subscribe' to groups
+# @param uname username of current user
+# @param data raw input provided by user
 def s(uname, data):
     args = data.split(' ')
     if len(args)==2:
@@ -152,7 +202,7 @@ def s(uname, data):
     for i in range(len(groups)):
         if groups[i]['group_id'] in l: # add only those that are not already added, prevent duplication
             x.append(groups[i]['group_id'])
-    for o in x: #remove groups alreayd in subscribed group from l
+    for o in x: #remove groups already in subscribed group from l
         l.remove(o)
     for i in l:
         #add the remaining items
@@ -165,7 +215,9 @@ def s(uname, data):
     with open(uname + '.json', 'w') as f:
         dump({'groups': groups}, fp=f, indent=4)
 
-
+# accesses local user file to 'unsubscribe' to groups
+# @param uname username of current user
+# @param data raw input provided by user
 def u(uname, data):
     args = data.split(' ')
     if len(args) == 2:
@@ -187,13 +239,21 @@ def u(uname, data):
         dump({'groups': groups}, fp=f, indent=4)
 
 
+# checks if current user is a member of group denoted by its ID
+# @param username username of current user
+# @param gid ID of group of which to check subscription
+# @return True if user is a member of group, false otherwise
 def check_subscription(username, gid):
     groups = get_subscribed_groups(username)
     for g in groups:
-        if g['id'] == gid:
+        if g['group_id'] == gid:
             return True
     raise False
 
+# formats string for server to 'read post'
+# @param gid ID of group where post belongs
+# @param data raw input provided by user
+# @return formatted string to send to server side 'rp'
 def rp(gid, data):
     return '\5'.join(['rp',str(gid),data])
 

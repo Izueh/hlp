@@ -5,6 +5,7 @@ import sys
 from server_functions import sg,ag ,p ,rp,rg
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
 
+#class ran by server during serve_forever thread.
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
@@ -32,7 +33,8 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
             self.request.sendall(bytes(response,'utf-8'))
             
-
+# ThreadedTCPServer class. Allows for us to override default parameters.
+# Currently using defaults
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
@@ -49,11 +51,13 @@ if __name__ == "__main__":
     server_thread.start()
     print("Server loop running in thread:", server_thread.name)
 
+    #server-side user input
     while(True):
         data = sys.stdin.readline().rstrip()
-        instruction = data[0]
-        if instruction == 'q':
-            break
+        if len(data) > 0:
+            instruction = data[0]
+            if instruction == 'q':
+                break
 
     server.shutdown()
     server.server_close()
