@@ -2,7 +2,7 @@
   "discussion_groups": [
     {
       "group_id": 1,
-      "title": "Discussion Group A",
+      "title": "Discussion.Group.A",
       "post_count": 1,
       "posts": [
         {
@@ -16,7 +16,7 @@
     },
     {
       "group_id": 2,
-      "title": "Discussion Group B",
+      "title": "Discussion.Group.B",
       "post_count": 4,
       "posts": [
         {
@@ -51,7 +51,7 @@
     },
     {
       "group_id": 3,
-      "title": "Discussion Group C",
+      "title": "Discussion.Group.C",
       "post_count": 3,
       "posts": [
         {
@@ -79,7 +79,7 @@
     },
     {
       "group_id": 4,
-      "title": "Discussion Group D",
+      "title": "Discussion.Group.D",
       "post_count": 2,
       "posts": [
         {
@@ -101,7 +101,7 @@
     {
 
       "group_id": 5,
-      "title": "Discussion Group E",
+      "title": "Discussion.Group.E",
       "post_count": 1,
       "posts": [
         {
