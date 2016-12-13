@@ -91,8 +91,10 @@ def sg(data):
         if i >= len(groups):
             break
         if groups[i]['group_id'] in ugroups:
+            index = ugroups.index(groups[i]['group_id']) # EDGAR: we can't use I for read_count we have to find the index of
+            # the group in ugroups not in groups this should fix it
             response += '%d. %d %s\n' % \
-                    (i,groups[i]['post_count']-read_count[i], groups[i]['title'])
+                    (i,groups[i]['post_count']-read_count[index], groups[i]['title'])
     response.rstrip()
     return response if response != "" else "Not subscribed to any groups"
 
@@ -102,11 +104,15 @@ def sg(data):
 # @return formatted string to reply to client
 def rg(data):
     usergroups = data.split('\5')
+    query,start,end = usergroups[0].split(' ')
+    start = int(start)
+    end = int(end)+1
+
     #format of usergroups for no read posts in group with id of 1
     #['rg 10 0 ', '1', '']
-    ugroups = int(usergroups[3].split('\5'))
-    pids = ugroups[1].split('\r\n')
-    gid = ugroups[0]
+    ugroups = int(usergroups[1].split('\5'))
+    pids = ugroups[2].split('\r\n') if ugroups[2] is not '' else []
+    gid = ugroups[1]
     groups = get_all_groups()
     response = ''
 
@@ -120,7 +126,7 @@ def rg(data):
                     list.remove(l)
             for l in list:
                 x.append(l)
-            for i in range(int(usergroups[1]), int(usergroups[2])):
+            for i in range(start, end):
                 if i < len(x):
                     post = x[i]
                     read = ' '

@@ -70,7 +70,7 @@ def internal_ag(sock, username, data, is_ag):
         response = ag(username, data, n)
     else:
         response = sg(username, data, n)
-    n = n + 1
+    n = n + 1 #DEBUG: n= size+1 should fix this
     respond_to_server(sock, response)
     previous_ag_sg_response = received = receive_from_server(sock)
     print(received)
