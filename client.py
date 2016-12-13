@@ -38,7 +38,7 @@ def internal_rg(sock, username, data):
 
 
     while (True):
-        data = sys.stdin.readline()
+        data = sys.stdin.readline().rstrip()
         instruction = data.split(' ')[0]
         if instruction.isdigit():
             response = rp(gid, data)
@@ -51,7 +51,7 @@ def internal_rg(sock, username, data):
         elif instruction == 'q':
             break
         else:
-            print(INVALID_INPUT.format(data))
+            print(RG_HELP.format(data))
             print(HELP)
             continue
         respond_to_server(sock, response)
@@ -98,7 +98,7 @@ def internal_ag(sock, username, data, is_ag):
         elif instruction == 'q':
             return
         else:
-            print(INVALID_INPUT.format(data))
+            print(AG_HELP.format(data))
             print(HELP)
 
 # obtain input from server
