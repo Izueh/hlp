@@ -129,7 +129,7 @@ def rg(data):
                 if i < len(x):
                     post = x[i]
                     read = 'N'
-                    if x[i]['post_id'] in pids:
+                    if str(x[i]['post_id']) in pids:
                         read = ' '
                     response += '%d. (%s) %s %s' % \
                                 (post['post_id'], read, post['date'], post['content'])
