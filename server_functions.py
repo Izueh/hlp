@@ -63,7 +63,7 @@ def p(data):
             with open(hlpdb, 'w') as f:
                 dump({'discussion_groups': groups}, fp=f)
             writingLock.pop(hlpdb)
-            return groups[i]
+            return 'Post Succesful'
 
 # server-side 'subscribed groups'. Parses client side 'sg' request 
 # and formats response for client
