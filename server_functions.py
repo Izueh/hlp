@@ -29,7 +29,7 @@ def ag(data):
     ugroups = [int(g) for g in data[3].split('\5')] if data[3] is not '' else []
     response = ''
     groups = get_all_groups()
-    for i in range(int(data[1]), int(data[2])+int(data[1])):
+    for i in range(int(data[1]), int(data[2])):
         if i >= len(groups):
             break
         response += '%d. (%s) %s' % \
