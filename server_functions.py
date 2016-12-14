@@ -128,10 +128,10 @@ def rg(data):
             for i in range(start, end):
                 if i < len(x):
                     post = x[i]
-                    read = ' '
+                    read = 'N'
                     if x[i]['post_id'] in pids:
-                        read = 'N'
-                    response += '%d. %s %s %s' % \
+                        read = ' '
+                    response += '%d. (%s) %s %s' % \
                                 (post['post_id'], read, post['date'], post['content'])
                     response += '\n'
     response=response.rstrip()
