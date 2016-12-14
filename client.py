@@ -1,7 +1,7 @@
 from socket import error as SocketError
 import socket
 import sys
-from client_functions import is_logged_in, not_logged_in, HELP, login, ag, sg, u, r, p, s, rp, rg
+from client_functions import is_logged_in, not_logged_in, HELP, AG_HELP, RG_HELP, login, ag, sg, u, r, p, s, rp, rg
 
 HOST, PORT = "localhost", 9999
 INVALID_INPUT = "{} is not a proper instruction. Please try again\n"
@@ -51,8 +51,8 @@ def internal_rg(sock, username, data):
         elif instruction == 'q':
             break
         else:
-            print(RG_HELP.format(data))
-            print(HELP)
+            print(INVALID_INPUT.format(data))
+            print(RG_HELP)
             continue
         respond_to_server(sock, response)
         print(receive_from_server(sock))
@@ -98,8 +98,8 @@ def internal_ag(sock, username, data, is_ag):
         elif instruction == 'q':
             return
         else:
-            print(AG_HELP.format(data))
-            print(HELP)
+            print(INVALID_INPUT.format(data))
+            print(AG_HELP)
 
 # obtain input from server
 # @param sock socket variable to communicate with server
