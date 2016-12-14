@@ -2,7 +2,7 @@ from json import load, dump
 from os import listdir
 
 NOT_LOGGED_IN = "Not logged in. Please log in before using the forum.\n"
-HELP = '''Usage: COMMAND [ARG|SUBCOMMAND] [SUBCOMMAND]
+HELP = '''Usage: COMMAND [ARG]
     login USERID\tDetermines which discussion groups you are to and which posts you have read
     help\tPrints this help menu of supported commands and subcommands
     ag [N] \tList the names of all existing discussion groups optional argument N at a time
