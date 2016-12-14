@@ -206,7 +206,7 @@ def s(uname, data):
     args = data.split(' ')
     if len(args)==2:
         start = int(args[1])
-        end = int(args[1])
+        end = int(args[1]) + 1
     elif len(args)== 3:
         start = int(args[1])
         end = int(args[2]) + 1
@@ -236,7 +236,7 @@ def u(uname, data):
     args = data.split(' ')
     if len(args) == 2:
         start = int(args[1])
-        end = int(args[1])
+        end = int(args[1]) + 1
     elif len(args) == 3:
         start = int(args[1])
         end = int(args[2]) + 1
