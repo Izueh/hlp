@@ -70,7 +70,8 @@ def optional_size(data, start):
             size = int(n[1])
         else:
             raise TypeError("Non-digit input was provided: ", size)
-    return str(size + start)
+    start*=size
+    return start,str(size + start)
 
 
 # 'all groups' function. Provides string with necessary information to obtain
@@ -80,7 +81,7 @@ def optional_size(data, start):
 # @param n current offset (times we have already read the same content)
 # @return string to sent to server side 'ag'
 def ag(user, data, n):
-    size = optional_size(data, n)
+    n,size = optional_size(data, n)
     groups = get_subscribed_groups(user)
     response = 'ag ' + str(n) + ' ' + size + ' ' + '\5'.join(str(g['group_id']) for g in groups)
     return response
@@ -92,7 +93,7 @@ def ag(user, data, n):
 # @param n current offset (times we have already read the same content)
 # @return string to sent to server side 'sg'
 def sg(user, data, n):
-    size = optional_size(data, n)
+    n, size = optional_size(data, n)
     groups = get_subscribed_groups(user)
     # with optional size N of size and offset of n (really need to change variable names)
     # we have output: 'sg 4 7 1\x0520\x052\x0510'
