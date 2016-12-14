@@ -177,11 +177,11 @@ def p(uname, data, groupid):
 # @param uname username of current user
 # @param data raw input provided by user
 # @param groupid ID of group to which the post belongs
-def r(uname, data, groupid):
+def r(data, uname, groupid):
     args = data.split(' ')
     if len(args) == 2:
         start = int(args[1])
-        end = int(args[1])
+        end = int(args[1])+1
     elif len(args) == 3:
         start = int(args[1])
         end = int(args[2]) + 1

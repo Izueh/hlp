@@ -44,6 +44,7 @@ def internal_rg(sock, username, data):
             response = rp(gid, data)
         elif instruction == 'r':
             response = r(data, username, gid)
+            continue
         elif instruction == 'n':
             response = rg(username, intial_data, gid, offset)
         elif instruction == 'p':
