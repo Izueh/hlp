@@ -144,9 +144,11 @@ def rg(data):
 def rp(data):
 
     groupid, postid = data.split(' ')[1].split('\5')
+    groupid = int(groupid)
+    postid = int(postid)
     groups = get_all_groups()
     for g in groups:
         if g['group_id']==groupid:
             for p in g['posts']:
                 if p['post_id']==postid:
-                    return '\5'.join([p['post_id'],p['subject'],p['author'],p['date'],p['content']])
+                    return '\n'.join([str(p['post_id']),p['subject'],p['author'],p['date'],p['content']])
