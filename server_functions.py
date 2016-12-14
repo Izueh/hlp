@@ -94,7 +94,7 @@ def sg(data):
             index = ugroups.index(groups[i]['group_id']) # EDGAR: we can't use I for read_count we have to find the index of
             # the group in ugroups not in groups this should fix it
             response += '%d. %d %s\n' % \
-                    (i,groups[i]['post_count']-read_count[index], groups[i]['title'])
+                    (groups[i]['group_id'],groups[i]['post_count']-read_count[index], groups[i]['title'])
     response.rstrip()
     return response if response != "" else "Not subscribed to any groups"
 
