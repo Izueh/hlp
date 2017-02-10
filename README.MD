@@ -1,13 +1,11 @@
 #hlp!
 
-hlp! is a interest-based discussion groups python web app.
+hlp! is a interest-based discussion groups python based cli app.
 
 ### To Do:
 - [ ] ~~Everything~~
 - See Issues
 
-### How to:
-- To Do
 
 
 
